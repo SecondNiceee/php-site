@@ -1,0 +1,14 @@
+{
+   "autoload": {
+      "psr-4": {
+         "shop\\": "vendor/shop",
+         "app\\": "app"
+      }
+   },
+   "require": {
+      "gabordemooij/redbean": "^v5.7.1",
+      "vlucas/valitron": "^1.4",
+      "phpmailer/phpmailer": "^6.6"
+   }
+
+}

@@ -1,0 +1,7 @@
+/vendor/
+/tmp/
+/old/
+public/uploads/
+.DS_Store
+Thumbs.db
+*.log
