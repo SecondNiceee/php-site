@@ -9,7 +9,7 @@
          <section class="subproduct">
             <div class="subproduct__container">
                <div class="subproduct__title">
-                  <h1><?=$category['title']?></h1>
+                  <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 15px;"><?=$category['title']?></h1>
                </div>
                <?php if(!empty($category['content'])): ?>
                <div class="category-content">
