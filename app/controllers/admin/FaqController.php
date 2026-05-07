@@ -5,7 +5,7 @@ namespace app\controllers\admin;
 use app\models\admin\Faq;
 use R;
 
-class FaqController extends AdminController
+class FaqController extends AppController
 {
     public function __construct()
     {
