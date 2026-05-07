@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\models\Category;
 use app\models\Breadcrumbs;
+use RedBeanPHP\R;
 use shop\App;
 use shop\Pagination;
 
