@@ -7,7 +7,7 @@
          <section class="subcatalog">
             <div class="subcatalog__container">
                <div class="subcatalog__title">
-                  <h4><?=$catalog[0]['title']?></h4>
+                  <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 15px;"><?=$catalog[0]['title']?></h1>
                </div>
                <?php if(isset($subcatalog)):?>
                <div class="subcatalog__items">

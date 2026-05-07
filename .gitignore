@@ -1,6 +1,11 @@
 ```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+
 # Dependencies
 vendor/
+composer.lock
 
 # Logs and temp files
 *.log
@@ -19,12 +24,35 @@ vendor/
 .DS_Store
 Thumbs.db
 
-# PHP specific
-*.php~
-.php_cs.cache
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
 
-# Build artifacts
-dist/
+# IDE specific
+*.swp
+*.swo
+
+# Build directories
 build/
+dist/
 target/
+
+# Python cache
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+
+# Node modules if present
+node_modules/
+
+# Virtual environments
+venv/
+.venv/
+.env/
+
+# Test coverage
+.nyc_output/
+coverage.xml
 ```
