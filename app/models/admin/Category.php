@@ -34,6 +34,7 @@ class Category extends AppModel
             $category_id = R::store($category);
             $category->slug = AppModel::create_slug('category', 'slug', $_POST['title'], $category_id);
             $category->description = post('description');
+            $category->content = post('content');
             $category->keywords = post('keywords');
             $category->price = post('price');
             $category->img = post('img');
@@ -63,6 +64,7 @@ class Category extends AppModel
             $category->parent_id = post('parent_id', 'i');
             $category->title = post('title');
             $category->description = post('description');
+            $category->content = post('content');
             $category->keywords = post('keywords');
             $category->price = post('price');
             $category->popular = post('popular');

@@ -29,6 +29,11 @@
                                  <label for="exampleFormControlInput1">Наименование</label>
                                  <input class="form-control" id="exampleFormControlInput1" name='title' type="text" placeholder="Имя категории" value="<?=h($brand['title'])?>" required>
                               </div>
+                              <div class="mb-3">
+                                 <label for="slugInput">Транслит (slug)</label>
+                                 <input class="form-control" id="slugInput" name='slug' type="text" placeholder="brand-name" value="<?=h($brand['slug'])?>" required>
+                                 <small class="form-text text-muted">Например: danfoss, bosch, siemens. Только латинские буквы, цифры и дефис.</small>
+                              </div>
                               
                               <div class="card mb-3">
                                  <div class="card-header">Логотип</div>
@@ -58,6 +63,10 @@
                               <div class="form-check">
                                  <input class="form-check-input" name="popular" id="flexCheckPopular" type="checkbox" <?php if($brand['popular'] == 1) echo('checked'); ?>>
                                  <label class="form-check-label mb-3" for="flexCheckPopular">Популярный бренд</label>
+                              </div>
+                              <div class="mb-3">
+                                 <label for="contentInput">Текстовое описание (контент)</label>
+                                 <textarea class="form-control" id="contentInput" name="content" rows="10"><?=h($brand['content'])?></textarea>
                               </div>
                               <button type="submit" class="btn btn-primary">Сохранить</button>
                            </form>

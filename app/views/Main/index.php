@@ -262,4 +262,8 @@
             </div>
          </section>
          <?php endif; ?>
+
+         <!-- Блок Вопросы-Ответы -->
+         <?= \app\widgets\FaqWidget::render('main', 0) ?>
+
       </main>

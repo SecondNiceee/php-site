@@ -7,6 +7,7 @@ Router::add('^admin/(?P<controller>[a-z-]+)/?(?P<action>[a-z-]+)?$', ['admin_pre
 
 Router::add('^product/(?P<slug>[a-z0-9-]+)/?$', ['controller' => 'Product', 'action' => 'view']);
 Router::add('^category/(?P<slug>[a-z0-9-]+)/?$', ['controller' => 'Category', 'action' => 'view']);
+Router::add('^brand/(?P<slug>[a-z0-9-]+)/?$', ['controller' => 'Brand', 'action' => 'view']);
 Router::add('^catalog?$', ['controller' => 'Catalog', 'action' => 'view']);
 Router::add('^subcatalog/(?P<slug>[a-z0-9-]+)/?$', ['controller' => 'Subcatalog', 'action' => 'view']);
 

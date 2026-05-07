@@ -100,6 +100,10 @@
                                 <div class="nav-link-icon"><i data-feather="message-square"></i></div>
                                 Отзывы
                             </a>
+                            <a class="nav-link" href="<?=ADMIN?>/faq">
+                                <div class="nav-link-icon"><i data-feather="help-circle"></i></div>
+                                Вопросы и ответы
+                            </a>
                             
                         </div>
                     </div>

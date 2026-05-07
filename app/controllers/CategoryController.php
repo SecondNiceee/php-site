@@ -62,6 +62,15 @@ class CategoryController extends AppController
       }
       $brands = array_intersect_key( $brands_arr , array_unique( array_map('serialize' , $brands_arr ) ) );
       
+      // Преобразуем ссылки на бренды в ЧПУ формат
+      $brands_urls = [];
+      foreach($brands as $brand) {
+         $brand_slug = R::getRow("SELECT slug FROM brand WHERE id = ?", [$brand['id']]);
+         $brand['slug'] = $brand_slug ? $brand_slug['slug'] : '';
+         $brands_urls[] = $brand;
+      }
+      $brands = $brands_urls;
+      
       
       $this->setMeta($category['title'], $category['description'], $category['keywords']);
       $this->set(compact('category', 'breadcrumbs', 'products', 'brands', 'total', 'pagination', 'get_brand'));

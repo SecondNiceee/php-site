@@ -29,6 +29,11 @@
                                  <label for="exampleFormControlInput1">Наименование</label>
                                  <input class="form-control" id="exampleFormControlInput1" name='title' type="text" placeholder="Наименование бренда" value="<?=get_field_value('title')?>" >
                               </div>
+                              <div class="mb-3">
+                                 <label for="slugInput">Транслит (slug)</label>
+                                 <input class="form-control" id="slugInput" name='slug' type="text" placeholder="brand-name" value="<?=get_field_value('slug')?>" required>
+                                 <small class="form-text text-muted">Например: danfoss, bosch, siemens. Только латинские буквы, цифры и дефис.</small>
+                              </div>
                               <div class="card mb-3">
                                  <div class="card-header">Загрузить логотип</div>
                                  <div class="card-body ">
@@ -48,6 +53,10 @@
                               <div class="form-check">
                                  <input class="form-check-input" name="popular" id="flexCheckPopular" type="checkbox" <?php if(get_field_value('popular') == 'on') echo 'checked' ?>>
                                  <label class="form-check-label mb-3" for="flexCheckPopular">Популярный бренд</label>
+                              </div>
+                              <div class="mb-3">
+                                 <label for="contentInput">Текстовое описание (контент)</label>
+                                 <textarea class="form-control" id="contentInput" name="content" rows="10"><?=get_field_value('content')?></textarea>
                               </div>
                               <button type="submit" class="btn btn-primary">Добавить</button>
                            </form>
