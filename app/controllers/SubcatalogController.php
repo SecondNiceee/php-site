@@ -12,7 +12,8 @@ class SubcatalogController extends AppController
    public function viewAction()
    {
       $catalog = $this->model->get_catalog($this->route['slug']);
-      $subcatalog = $this->model->get_subcatalog($catalog[0]['id']);
+      $category = $catalog[0];
+      $subcatalog = $this->model->get_subcatalog($category['id']);
       $brands = $this->model->get_brand();
 
       if(!$subcatalog){
@@ -20,10 +21,10 @@ class SubcatalogController extends AppController
          return;
       }
 
-      $breadcrumbs = Breadcrumbs::getBreadcrumbs($catalog[0]['id']);
+      $breadcrumbs = Breadcrumbs::getBreadcrumbs($category['id']);
 
-      $this->setMeta($catalog[0]['title'], '', '');
-      $this->set(compact('catalog', 'subcatalog', 'breadcrumbs', 'brands'));
+      $this->setMeta($category['title'], '', '');
+      $this->set(compact('catalog', 'category', 'subcatalog', 'breadcrumbs', 'brands'));
 
    }
 }
