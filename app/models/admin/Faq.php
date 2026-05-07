@@ -2,6 +2,8 @@
 
 namespace app\models\admin;
 
+use \R;
+
 class Faq
 {
     /**
