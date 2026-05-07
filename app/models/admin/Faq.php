@@ -2,7 +2,7 @@
 
 namespace app\models\admin;
 
-use \R;
+use RedBeanPHP\R;
 
 class Faq
 {
@@ -11,7 +11,7 @@ class Faq
      */
     public function getFaqByEntity($type, $id)
     {
-        return \R::getAll("
+        return R::getAll("
             SELECT * FROM faq 
             WHERE entity_type = ? AND entity_id = ? AND status = 1 
             ORDER BY sort_order ASC, id ASC
@@ -23,7 +23,7 @@ class Faq
      */
     public function getById($id)
     {
-        return \R::findOne('faq', 'id = ?', [$id]);
+        return R::findOne('faq', 'id = ?', [$id]);
     }
 
     /**
@@ -32,9 +32,9 @@ class Faq
     public function save($data)
     {
         if (!empty($data['id'])) {
-            $faq = \R::load('faq', $data['id']);
+            $faq = R::load('faq', $data['id']);
         } else {
-            $faq = \R::dispense('faq');
+            $faq = R::dispense('faq');
         }
 
         $faq->entity_type = $data['entity_type'];
@@ -44,7 +44,7 @@ class Faq
         $faq->sort_order = (int)$data['sort_order'];
         $faq->status = (int)$data['status'];
         
-        return \R::store($faq);
+        return R::store($faq);
     }
 
     /**
@@ -52,8 +52,8 @@ class Faq
      */
     public function delete($id)
     {
-        $faq = \R::load('faq', $id);
-        \R::trash($faq);
+        $faq = R::load('faq', $id);
+        R::trash($faq);
     }
 
     /**
@@ -80,7 +80,7 @@ class Faq
         }
         $sql .= " ORDER BY entity_type, entity_id, sort_order ASC, id ASC";
 
-        return \R::getAll($sql, $params);
+        return R::getAll($sql, $params);
     }
 
     /**
@@ -94,13 +94,13 @@ class Faq
 
         switch ($type) {
             case 'product':
-                $item = \R::findOne('product', 'id = ?', [$id]);
+                $item = R::findOne('product', 'id = ?', [$id]);
                 return $item ? $item['title'] : 'Товар не найден';
             case 'category':
-                $item = \R::findOne('category', 'id = ?', [$id]);
+                $item = R::findOne('category', 'id = ?', [$id]);
                 return $item ? $item['title'] : 'Категория не найдена';
             case 'brand':
-                $item = \R::findOne('brand', 'id = ?', [$id]);
+                $item = R::findOne('brand', 'id = ?', [$id]);
                 return $item ? $item['title'] : 'Бренд не найден';
             default:
                 return 'Неизвестная сущность';
