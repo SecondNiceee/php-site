@@ -83,6 +83,10 @@
                                        <input class="form-control" id="exampleFormControlInput2" name='description' type="text" placeholder="Описание категории" value="<?=get_field_value('description')?>">
                                     </div>
                                     <div class="mb-3">
+                                       <label for="content">Текстовое описание (контент)</label>
+                                       <textarea class="form-control ckeditor" id="content" name="content" placeholder="Текстовое описание категории"><?=get_field_value('content')?></textarea>
+                                    </div>
+                                    <div class="mb-3">
                                        <label for="exampleFormControlInput3">Ключевые слова</label>
                                        <input class="form-control" id="exampleFormControlInput3" name='keywords' type="text" placeholder="Ключевые слова категории" value="<?=get_field_value('keywords')?>">
                                     </div>
@@ -156,3 +160,18 @@
 
 
 
+
+                        <script>
+                           ClassicEditor
+                              .create( document.querySelector( '#content' ), {
+                                 ckfinder: {
+                                    uploadUrl: '<?= PATH ?>/sbadmin/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
+                                 },
+                              } )
+                              .then( editor => {
+                                 console.log( editor );
+                              } )
+                              .catch( error => {
+                                 console.error( error );
+                              } );
+                        </script>

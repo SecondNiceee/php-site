@@ -15,5 +15,9 @@ class Product extends AppModel
       return R::getAll("SELECT * FROM product_info WHERE product_id = ?", [$id]);
    }
 
+   public function get_products_info($id)
+   {
+      return R::getAll("SELECT info_key, info_val FROM product_info WHERE product_id = ?", [$id]);
+   }
    
 }

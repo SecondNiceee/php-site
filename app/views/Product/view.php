@@ -181,5 +181,7 @@
             </div>
          </section> -->
 
+         <!-- Блок Вопросы-Ответы -->
+         <?= \app\widgets\FaqWidget::render('product', $product['id']) ?>
 
       </main>

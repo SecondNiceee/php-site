@@ -24,6 +24,15 @@ class Brand extends AppModel
         if(!post('img')) {
             $errors .= 'Вы не выбрали логотип.<br>';
         }
+        if(!post('slug')) {
+            $errors .= 'Не заполнен транслит (slug).<br>';
+        } else {
+            // Проверка уникальности slug
+            $existing = R::getRow("SELECT id FROM brand WHERE slug = ? AND id != ?", [post('slug'), post('id') ?? 0]);
+            if($existing) {
+                $errors .= 'Такой транслит (slug) уже используется.<br>';
+            }
+        }
         
         if($errors) {
             $_SESSION['errors'] = $errors;
@@ -42,6 +51,8 @@ class Brand extends AppModel
             $brand->popular = post('popular') ? 1 : 0;
             $brand->img = post('img') ?: NO_IMAGE;
             $brand->title = post('title');
+            $brand->slug = post('slug');
+            $brand->content = post('content');
             R::store($brand);
             R::commit();
             return true;
@@ -75,6 +86,8 @@ class Brand extends AppModel
             $brand->popular = post('popular') ? 1 : 0;
             $brand->img = post('img') ?: NO_IMAGE;
             $brand->title = post('title');
+            $brand->slug = post('slug');
+            $brand->content = post('content');
             R::store($brand);
             R::commit();
             return true;
@@ -83,5 +96,25 @@ class Brand extends AppModel
             //debug($e, 1);
             return false;
         }
+    }
+
+    public function get_brand_by_slug($slug): array|false
+    {
+        $brand = R::getRow("SELECT * FROM brand WHERE status = 1 AND slug = ?", [$slug]);
+        if (!$brand) {
+            return false;
+        }   
+       
+        return $brand;
+    }
+
+    public function get_products_by_brand($brand_id, $start, $perpage): array
+    {
+        return R::getAll("SELECT * FROM product WHERE status = 1 AND brand_id = ? LIMIT $start, $perpage", [$brand_id]);
+    }
+
+    public function get_count_products_by_brand($brand_id): int
+    {
+        return R::count('product', "brand_id = ? AND status = 1", [$brand_id]);
     }
 }
