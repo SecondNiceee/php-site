@@ -61,8 +61,17 @@
 
                     <div class="mb-3" id="entity_slug_container" style="display: none;">
                         <label for="entity_slug" class="form-label">Slug сущности</label>
-                        <input type="text" name="entity_slug" id="entity_slug" class="form-control" placeholder="Например: kuhnya-galant">
+                        <input type="text" name="entity_slug" id="entity_slug" class="form-control" placeholder="Например: kuhnya-galant" onchange="updatePreviewLink()" oninput="updatePreviewLink()">
                         <small class="text-muted">Введите URL сущности (например, из адресной строки)</small>
+                    </div>
+
+                    <!-- Превью ссылки -->
+                    <div class="mb-3" id="preview_link_container" style="display: none;">
+                        <label class="form-label">Превью ссылки:</label>
+                        <div class="alert alert-info d-flex align-items-center" style="background-color: #e7f3ff; border-color: #b3d9ff; color: #004085; padding: 12px 15px; border-radius: 4px;">
+                            <i class="fa fa-link" style="margin-right: 10px; font-size: 16px;"></i>
+                            <code id="preview_link_text" style="background: none; color: inherit; padding: 0; font-size: 14px;">/ </code>
+                        </div>
                     </div>
 
                     <?php if (isset($faq)): ?>
@@ -107,8 +116,15 @@
         brand: <?= json_encode(array_map(fn($b) => ['id' => $b['id'], 'title' => $b['title']], $brands ?? [])) ?>
     };
     
-    const currentType = "<?= $faq['entity_type'] ?? '' ?>";
-    const currentId = "<?= $faq['entity_id'] ?? 0 ?>";
+const currentType = "<?= $faq['entity_type'] ?? '' ?>";
+const currentId = "<?= $faq['entity_id'] ?? 0 ?>";
+
+// Информация о slug для каждой сущности
+const entitySlugs = {
+    product: <?= json_encode(array_map(fn($p) => ['id' => $p['id'], 'slug' => $p['slug'] ?? ''], $products ?? [])) ?>,
+    category: <?= json_encode(array_map(fn($c) => ['id' => $c['id'], 'slug' => $c['slug'] ?? ''], $categories ?? [])) ?>,
+    brand: <?= json_encode(array_map(fn($b) => ['id' => $b['id'], 'slug' => $b['slug'] ?? ''], $brands ?? [])) ?>
+};
 </script>
 
 <script>
@@ -116,24 +132,28 @@ function updateEntitySelect() {
     const type = document.getElementById('entity_type').value;
     const idContainer = document.getElementById('entity_id_container');
     const slugContainer = document.getElementById('entity_slug_container');
+    const previewContainer = document.getElementById('preview_link_container');
     const select = document.getElementById('entity_id');
     
     if (type === 'main') {
         idContainer.style.display = 'none';
         slugContainer.style.display = 'none';
-        select.value = '0';
+        previewContainer.style.display = 'block';
+        updatePreviewLink();
         return;
     }
     
     if (!type || !entitiesData[type]) {
         idContainer.style.display = 'none';
         slugContainer.style.display = 'none';
+        previewContainer.style.display = 'none';
         return;
     }
     
-    // Показываем оба контейнера
+    // Показываем контейнеры
     idContainer.style.display = 'block';
     slugContainer.style.display = 'block';
+    previewContainer.style.display = 'block';
     
     // Заполняем селект
     select.innerHTML = '<option value="0">Выберите сущность (опционально)</option>';
@@ -147,6 +167,48 @@ function updateEntitySelect() {
         }
         select.appendChild(option);
     });
+    
+    updatePreviewLink();
+}
+
+function updatePreviewLink() {
+    const type = document.getElementById('entity_type').value;
+    const idSelect = document.getElementById('entity_id');
+    const slugInput = document.getElementById('entity_slug');
+    const previewText = document.getElementById('preview_link_text');
+    const previewContainer = document.getElementById('preview_link_container');
+    
+    if (type === 'main') {
+        previewText.textContent = '/';
+        previewContainer.style.display = 'block';
+        return;
+    }
+    
+    if (!type) {
+        previewContainer.style.display = 'none';
+        return;
+    }
+    
+    let slug = '';
+    
+    // Если заполнен slug вручную
+    if (slugInput && slugInput.value.trim()) {
+        slug = slugInput.value.trim();
+    } 
+    // Если выбран ID в селекте
+    else if (idSelect && idSelect.value !== '0' && entitySlugs[type]) {
+        const entity = entitySlugs[type].find(e => e.id == idSelect.value);
+        if (entity && entity.slug) {
+            slug = entity.slug;
+        }
+    }
+    
+    if (slug) {
+        previewText.textContent = `/${type}/${slug}`;
+        previewContainer.style.display = 'block';
+    } else {
+        previewContainer.style.display = 'none';
+    }
 }
 
 // Инициализация при загрузке
@@ -163,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.value.trim() !== '') {
                 entityIdSelect.value = '0';
             }
+            updatePreviewLink();
         });
     }
     
@@ -172,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.value !== '0') {
                 entitySlugInput.value = '';
             }
+            updatePreviewLink();
         });
     }
     
