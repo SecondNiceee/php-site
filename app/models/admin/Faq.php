@@ -106,4 +106,52 @@ class Faq
                 return 'Неизвестная сущность';
         }
     }
+
+    /**
+     * Получить название сущности по slug
+     */
+    public function getEntityTitleBySlug($type, $slug)
+    {
+        if ($slug == 'main' && $type == 'main') {
+            return 'Главная страница';
+        }
+
+        switch ($type) {
+            case 'product':
+                $item = R::findOne('product', 'slug = ?', [$slug]);
+                return $item ? $item['title'] : 'Товар не найден';
+            case 'category':
+                $item = R::findOne('category', 'slug = ?', [$slug]);
+                return $item ? $item['title'] : 'Категория не найдена';
+            case 'brand':
+                $item = R::findOne('brand', 'slug = ?', [$slug]);
+                return $item ? $item['title'] : 'Бренд не найден';
+            default:
+                return 'Неизвестная сущность';
+        }
+    }
+
+    /**
+     * Получить ID сущности по slug
+     */
+    public function getEntityIdBySlug($type, $slug)
+    {
+        if ($slug == 'main' && $type == 'main') {
+            return 0;
+        }
+
+        switch ($type) {
+            case 'product':
+                $item = R::findOne('product', 'slug = ?', [$slug]);
+                return $item ? (int)$item['id'] : 0;
+            case 'category':
+                $item = R::findOne('category', 'slug = ?', [$slug]);
+                return $item ? (int)$item['id'] : 0;
+            case 'brand':
+                $item = R::findOne('brand', 'slug = ?', [$slug]);
+                return $item ? (int)$item['id'] : 0;
+            default:
+                return 0;
+        }
+    }
 }
