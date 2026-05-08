@@ -7,9 +7,9 @@ use R;
 
 class FaqController extends AppController
 {
-    public function __construct()
+    public function __construct($route)
     {
-        parent::__construct();
+        parent::__construct($route);
         $this->model = new Faq();
     }
 

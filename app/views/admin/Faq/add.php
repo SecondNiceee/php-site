@@ -1,4 +1,3 @@
-<?php $this->layout('admin'); ?>
 
 <div class="page-header">
     <h1><?= isset($faq) && !empty($faq['id']) ? 'Редактировать вопрос' : 'Добавить вопрос' ?></h1>

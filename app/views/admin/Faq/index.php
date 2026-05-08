@@ -1,4 +1,4 @@
-<?php $this->layout('admin'); ?>
+
 
 <div class="page-header">
     <h1>Вопросы и ответы</h1>
