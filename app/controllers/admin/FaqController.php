@@ -68,7 +68,7 @@ class FaqController extends AppController
      */
     public function editAction()
     {
-        $id = $this->route['id'];
+        $id = get('id');
         
         if (!empty($_POST)) {
             // Если передан slug вместо entity_id, конвертируем его в ID
@@ -107,7 +107,7 @@ class FaqController extends AppController
      */
     public function deleteAction()
     {
-        $id = $this->route['id'];
+        $id = get('id');
         $this->model->delete($id);
         $_SESSION['success'] = 'Вопрос удален';
         redirect(ADMIN . '/faq');
