@@ -186,13 +186,17 @@ class FaqWidget
             }
 
             .faq-answer {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.35s ease;
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows 0.3s ease-out;
             }
 
             .faq-item.active .faq-answer {
-                max-height: 2000px;
+                grid-template-rows: 1fr;
+            }
+
+            .faq-answer > .faq-answer-content {
+                overflow: hidden;
             }
 
             .faq-answer-content {
@@ -200,6 +204,9 @@ class FaqWidget
                 color: #445060;
                 line-height: 1.7;
                 font-size: 15px;
+            }
+            
+            .faq-item.active .faq-answer-content {
                 border-top: 1px solid #eef2f8;
                 padding-top: 16px;
             }
