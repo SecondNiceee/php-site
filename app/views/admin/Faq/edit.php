@@ -52,10 +52,17 @@
                     </div>
 
                     <div class="mb-3" id="entity_id_container" style="display: none;">
-                        <label for="entity_id" class="form-label required">Сущность *</label>
+                        <label for="entity_id" class="form-label">Сущность (по ID)</label>
                         <select name="entity_id" id="entity_id" class="form-select">
                             <option value="0">Не выбрано</option>
                         </select>
+                        <small class="text-muted mt-1 d-block">Или введите slug ниже</small>
+                    </div>
+
+                    <div class="mb-3" id="entity_slug_container" style="display: none;">
+                        <label for="entity_slug" class="form-label">Slug сущности</label>
+                        <input type="text" name="entity_slug" id="entity_slug" class="form-control" placeholder="Например: kuhnya-galant">
+                        <small class="text-muted">Введите URL сущности (например, из адресной строки)</small>
                     </div>
 
                     <?php if (isset($faq)): ?>
@@ -107,22 +114,29 @@
 <script>
 function updateEntitySelect() {
     const type = document.getElementById('entity_type').value;
-    const container = document.getElementById('entity_id_container');
+    const idContainer = document.getElementById('entity_id_container');
+    const slugContainer = document.getElementById('entity_slug_container');
     const select = document.getElementById('entity_id');
     
     if (type === 'main') {
-        container.style.display = 'none';
+        idContainer.style.display = 'none';
+        slugContainer.style.display = 'none';
         select.value = '0';
         return;
     }
     
     if (!type || !entitiesData[type]) {
-        container.style.display = 'none';
+        idContainer.style.display = 'none';
+        slugContainer.style.display = 'none';
         return;
     }
     
-    container.style.display = 'block';
-    select.innerHTML = '<option value="0">Выберите сущность</option>';
+    // Показываем оба контейнера
+    idContainer.style.display = 'block';
+    slugContainer.style.display = 'block';
+    
+    // Заполняем селект
+    select.innerHTML = '<option value="0">Выберите сущность (опционально)</option>';
     
     entitiesData[type].forEach(item => {
         const option = document.createElement('option');
@@ -138,6 +152,28 @@ function updateEntitySelect() {
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', function() {
     updateEntitySelect();
+    
+    // Обработка выбора между ID и slug
+    const entitySlugInput = document.getElementById('entity_slug');
+    const entityIdSelect = document.getElementById('entity_id');
+    
+    // При вводе slug очищаем выбор в селекте
+    if (entitySlugInput) {
+        entitySlugInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                entityIdSelect.value = '0';
+            }
+        });
+    }
+    
+    // При выборе в селекте очищаем slug
+    if (entityIdSelect) {
+        entityIdSelect.addEventListener('change', function() {
+            if (this.value !== '0') {
+                entitySlugInput.value = '';
+            }
+        });
+    }
     
     // Инициализация CKEditor если есть
     if (typeof CKEDITOR !== 'undefined') {

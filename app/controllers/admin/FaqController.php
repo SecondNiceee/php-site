@@ -3,7 +3,7 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Faq;
-use R;
+use RedBeanPHP\R;
 
 class FaqController extends AppController
 {
@@ -39,6 +39,15 @@ class FaqController extends AppController
     public function addAction()
     {
         if (!empty($_POST)) {
+            // Если передан slug вместо entity_id, конвертируем его в ID
+            if (!empty($_POST['entity_slug']) && !empty($_POST['entity_type'])) {
+                $_POST['entity_id'] = $this->model->getEntityIdBySlug($_POST['entity_type'], $_POST['entity_slug']);
+                if ($_POST['entity_id'] == 0 && $_POST['entity_type'] !== 'main') {
+                    $this->session->flash('error', 'Сущность с таким slug не найдена');
+                    redirect(ADMIN . '/faq/add');
+                }
+            }
+            
             $id = $this->model->save($_POST);
             $this->session->flash('success', 'Вопрос добавлен');
             redirect(ADMIN . '/faq');
@@ -62,6 +71,15 @@ class FaqController extends AppController
         $id = $this->route['id'];
         
         if (!empty($_POST)) {
+            // Если передан slug вместо entity_id, конвертируем его в ID
+            if (!empty($_POST['entity_slug']) && !empty($_POST['entity_type'])) {
+                $_POST['entity_id'] = $this->model->getEntityIdBySlug($_POST['entity_type'], $_POST['entity_slug']);
+                if ($_POST['entity_id'] == 0 && $_POST['entity_type'] !== 'main') {
+                    $this->session->flash('error', 'Сущность с таким slug не найдена');
+                    redirect(ADMIN . '/faq/edit/' . $id);
+                }
+            }
+            
             $_POST['id'] = $id;
             $this->model->save($_POST);
             $this->session->flash('success', 'Вопрос обновлен');
