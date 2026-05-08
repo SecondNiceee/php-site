@@ -136,6 +136,13 @@ class Faq
      */
     public function getEntityIdBySlug($type, $slug)
     {
+        // Приводим slug к строке и убираем лишние пробелы
+        $slug = is_array($slug) ? '' : trim((string)$slug);
+        
+        if (empty($slug)) {
+            return 0;
+        }
+        
         if ($slug == 'main' && $type == 'main') {
             return 0;
         }
