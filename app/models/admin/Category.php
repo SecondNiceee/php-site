@@ -85,4 +85,37 @@ class Category extends AppModel
     {
         return R::getRow("SELECT * FROM category WHERE id = ?", [$id]);
     }
+
+    public function duplicate_category($id): int|false
+    {
+        R::begin();
+        try {
+            $original = R::getRow("SELECT * FROM category WHERE id = ?", [$id]);
+            if (!$original) {
+                return false;
+            }
+            
+            $category = R::dispense('category');
+            $category->parent_id = $original['parent_id'];
+            $category->title = $original['title'] . ' (копия)';
+            $category_id = R::store($category);
+            
+            $category->slug = AppModel::create_slug('category', 'slug', $category->title, $category_id);
+            $category->description = $original['description'];
+            $category->content = $original['content'];
+            $category->keywords = $original['keywords'];
+            $category->price = $original['price'];
+            $category->img = $original['img'];
+            $category->icon = $original['icon'];
+            $category->popular = $original['popular'];
+            $category->status = 0; // По умолчанию неактивна
+            
+            R::store($category);
+            R::commit();
+            return $category_id;
+        } catch (\Exception $e) {
+            R::rollback();
+            return false;
+        }
+    }
 }

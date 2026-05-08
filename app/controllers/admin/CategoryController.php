@@ -83,4 +83,24 @@ class CategoryController extends AppController
         $this->setMeta($title);
         $this->set(compact('title', 'category'));
     }
+
+   public function duplicateAction()
+   {
+      $id = get('id');
+      $category = $this->model->get_category($id);
+      if (!$category) {
+         $_SESSION['errors'] = 'Категория не найдена';
+         redirect();
+      }
+      
+      $newId = $this->model->duplicate_category($id);
+      if ($newId) {
+         $_SESSION['success'] = 'Категория дублирована';
+         $cache = Cache::getInstance();
+         $cache->delete('shop_menu');
+      } else {
+         $_SESSION['errors'] = 'Ошибка при дублировании!';
+      }
+      redirect();
+   }
 }
