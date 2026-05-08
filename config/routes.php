@@ -15,7 +15,6 @@ Router::add('^search/?$', ['controller' => 'Search', 'action' => 'index']);
 Router::add('^page/(?P<slug>[a-z0-9-]+)/?$', ['controller' => 'Page', 'action' => 'view']);
 Router::add('^about?$', ['controller' => 'About', 'action' => 'view']);
 Router::add('^reviews?$', ['controller' => 'Reviews', 'action' => 'view']);
-Router::add('^congratulation/?$', ['controller' => 'Congratulation', 'action' => 'index']);
                             
 Router::add('^$', ['controller' => 'Main', 'action' => 'index']);
 Router::add('^(?P<controller>[a-z-]+)/(?P<action>[a-z-]+)/?$');
