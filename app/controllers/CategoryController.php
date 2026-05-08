@@ -11,9 +11,26 @@ class CategoryController extends AppController
 {
    public function viewAction()
    {
-      $category = $this->model->get_category($this->route['slug']);
+      $category = $this->model->get_category($this->route['slug'] ?? $this->route['cat_slug']);
       $brands = $this->model->get_brand();
+      
+      // Проверяем, есть ли фильтр по бренду через URL параметр или новый параметр маршрута
       $get_brand = get('brand');
+      
+      // Если в маршруте есть brand_slug, получаем ID бренда по slug
+      if(!empty($this->route['brand_slug'])) {
+         $brand_data = R::getRow("SELECT id FROM brand WHERE slug = ? AND status = 1", [$this->route['brand_slug']]);
+         if($brand_data) {
+            $get_brand = $brand_data['id'];
+         } else {
+            if (!DEBUG) {
+               $this->error_404();
+               return;
+            }
+            throw new \Exception("Бренд по запросу {$this->route['brand_slug']} не найден", 404);
+         }
+      }
+      
       if(!$category){
          if (!DEBUG) {
             $this->error_404();
