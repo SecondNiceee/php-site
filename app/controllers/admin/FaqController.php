@@ -56,9 +56,9 @@ class FaqController extends AppController
         $this->setMeta('Добавить вопрос - Админ панель');
         
         // Получаем списки для селектов
-        $categories = R::findAll('category', 'status = 1', [], 'title ASC');
-        $brands = R::findAll('brand', 'status = 1', [], 'title ASC');
-        $products = R::findAll('product', 'status = 1', 'LIMIT 100', 'title ASC');
+        $categories = R::findAll('category', 'status = 1 ORDER BY title ASC');
+        $brands = R::findAll('brand', 'status = 1 ORDER BY title ASC');
+        $products = R::findAll('product', 'status = 1 ORDER BY title ASC LIMIT 100');
         
         $this->set(compact('categories', 'brands', 'products'));
     }
@@ -95,9 +95,9 @@ class FaqController extends AppController
         $this->setMeta('Редактировать вопрос - Админ панель');
         
         // Получаем списки для селектов
-        $categories = R::findAll('category', 'status = 1', [], 'title ASC');
-        $brands = R::findAll('brand', 'status = 1', [], 'title ASC');
-        $products = R::findAll('product', 'status = 1', 'LIMIT 100', 'title ASC');
+        $categories = R::findAll('category', 'status = 1 ORDER BY title ASC');
+        $brands = R::findAll('brand', 'status = 1 ORDER BY title ASC');
+        $products = R::findAll('product', 'status = 1 ORDER BY title ASC LIMIT 100');
         
         $this->set(compact('faq', 'categories', 'brands', 'products'));
     }
