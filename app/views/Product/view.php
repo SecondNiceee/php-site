@@ -8,7 +8,7 @@
          <section class="product">
             <div class="product__container">
                <div class="product__title">
-                  <h4><?=$product['title']?></h4>
+                  <h1><?=$product['title']?></h1>
                </div>
                <div class="product__wrapper">
                   <div class="product__body">

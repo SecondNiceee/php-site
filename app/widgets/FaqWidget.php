@@ -22,18 +22,22 @@ class FaqWidget
         
         ob_start();
         ?>
-        <div class="faq-section mt-5">
+        <div class="faq-section">
             <div class="container">
-                <h2 class="faq-title">Вопросы и ответы</h2>
+                <div class="faq-header">
+                    <span class="faq-badge">FAQ</span>
+                    <h2 class="faq-title">Вопросы и ответы</h2>
+                    <p class="faq-subtitle">Ответы на часто задаваемые вопросы</p>
+                </div>
                 <div class="faq-accordion">
                     <?php foreach ($faqs as $index => $faq): ?>
                         <div class="faq-item">
-                            <button class="faq-question" onclick="toggleFaq(this)">
+                            <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+                                <span class="faq-num"><?= $index + 1 ?></span>
                                 <span class="faq-question-text"><?= htmlspecialchars($faq['question']) ?></span>
                                 <span class="faq-icon">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M10 4.16667V15.8333" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                        <path d="M4.16667 10H15.8333" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 6L8 11L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </span>
                             </button>
@@ -50,197 +54,175 @@ class FaqWidget
 
         <style>
             .faq-section {
-                padding: 40px 0;
-                background-color: #f9fafb;
+                padding: 60px 0 50px;
+                background: #f7f9fc;
+                border-top: 1px solid #e8edf2;
+                margin-top: 40px;
             }
-            
+
+            .faq-header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .faq-badge {
+                display: inline-block;
+                background: #082a43;
+                color: #fff;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                padding: 4px 12px;
+                border-radius: 20px;
+                margin-bottom: 14px;
+            }
+
             .faq-title {
-                font-size: 28px;
+                font-size: 26px;
                 font-weight: 700;
                 color: #082a43;
-                margin-bottom: 30px;
-                text-align: center;
+                margin: 0 0 8px;
+                line-height: 1.3;
             }
-            
+
+            .faq-subtitle {
+                font-size: 15px;
+                color: #6b7a8d;
+                margin: 0;
+            }
+
             .faq-accordion {
-                max-width: 900px;
+                max-width: 820px;
                 margin: 0 auto;
             }
-            
+
             .faq-item {
                 background: #ffffff;
-                border-radius: 8px;
-                margin-bottom: 12px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                border-radius: 10px;
+                margin-bottom: 8px;
+                border: 1px solid #e8edf2;
                 overflow: hidden;
-                transition: all 0.3s ease;
+                transition: border-color 0.25s ease, box-shadow 0.25s ease;
             }
-            
+
             .faq-item:hover {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+                border-color: #c5d4e8;
+                box-shadow: 0 4px 16px rgba(8, 42, 67, 0.07);
             }
-            
+
+            .faq-item.active {
+                border-color: #2f72cf;
+                box-shadow: 0 4px 20px rgba(47, 114, 207, 0.12);
+            }
+
             .faq-question {
                 width: 100%;
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
-                padding: 20px 24px;
+                gap: 16px;
+                padding: 18px 20px;
                 background: none;
                 border: none;
                 cursor: pointer;
                 text-align: left;
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: 600;
                 color: #082a43;
-                font-family: 'Ubuntu', sans-serif;
-                transition: all 0.3s ease;
+                font-family: inherit;
+                transition: background 0.2s ease;
             }
-            
+
             .faq-question:hover {
-                background-color: #f0f4f8;
+                background: #f7f9fc;
             }
-            
+
+            .faq-item.active .faq-question {
+                background: #f0f5ff;
+            }
+
+            .faq-num {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #eef2f8;
+                color: #2f72cf;
+                font-size: 13px;
+                font-weight: 700;
+                flex-shrink: 0;
+                transition: background 0.25s ease, color 0.25s ease;
+            }
+
+            .faq-item.active .faq-num {
+                background: #2f72cf;
+                color: #fff;
+            }
+
             .faq-question-text {
                 flex: 1;
-                padding-right: 20px;
+                line-height: 1.4;
             }
-            
+
             .faq-icon {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 32px;
-                height: 32px;
+                width: 28px;
+                height: 28px;
                 border-radius: 50%;
-                background-color: #e8f0fe;
+                background: #eef2f8;
                 color: #2f72cf;
-                transition: all 0.3s ease;
                 flex-shrink: 0;
+                transition: background 0.25s ease, transform 0.3s ease;
             }
-            
+
             .faq-item.active .faq-icon {
-                background-color: #2f72cf;
-                color: #ffffff;
-                transform: rotate(45deg);
+                background: #2f72cf;
+                color: #fff;
+                transform: rotate(180deg);
             }
-            
+
             .faq-answer {
                 max-height: 0;
                 overflow: hidden;
-                transition: max-height 0.3s ease;
+                transition: max-height 0.35s ease;
             }
-            
+
             .faq-item.active .faq-answer {
-                max-height: 1000px;
+                max-height: 2000px;
             }
-            
+
             .faq-answer-content {
-                padding: 0 24px 24px 24px;
-                color: #333;
-                line-height: 1.6;
+                padding: 0 20px 22px 66px;
+                color: #445060;
+                line-height: 1.7;
                 font-size: 15px;
+                border-top: 1px solid #eef2f8;
+                padding-top: 16px;
             }
-            
-            .faq-answer-content p {
-                margin-bottom: 12px;
-            }
-            
-            .faq-answer-content p:last-child {
-                margin-bottom: 0;
-            }
-            
+
+            .faq-answer-content p { margin-bottom: 12px; }
+            .faq-answer-content p:last-child { margin-bottom: 0; }
             .faq-answer-content ul,
-            .faq-answer-content ol {
-                margin: 12px 0;
-                padding-left: 24px;
-            }
-            
-            .faq-answer-content li {
-                margin-bottom: 8px;
-            }
-            
-            .faq-answer-content a {
-                color: #2f72cf;
-                text-decoration: underline;
-            }
-            
-            .faq-answer-content a:hover {
-                color: #1e5bb0;
-            }
-            
-            /* Адаптивность */
-            @media (max-width: 991.98px) {
-                .faq-section {
-                    padding: 30px 0;
-                }
-                
-                .faq-title {
-                    font-size: 24px;
-                }
-                
-                .faq-question {
-                    padding: 16px 20px;
-                    font-size: 15px;
-                }
-                
-                .faq-answer-content {
-                    padding: 0 20px 20px 20px;
-                    font-size: 14px;
-                }
-            }
-            
+            .faq-answer-content ol { margin: 12px 0; padding-left: 20px; }
+            .faq-answer-content li { margin-bottom: 6px; }
+            .faq-answer-content a { color: #2f72cf; text-decoration: underline; }
+            .faq-answer-content a:hover { color: #1e5bb0; }
+
             @media (max-width: 767.98px) {
-                .faq-section {
-                    padding: 24px 0;
-                }
-                
-                .faq-title {
-                    font-size: 22px;
-                    margin-bottom: 24px;
-                }
-                
-                .faq-item {
-                    margin-bottom: 10px;
-                }
-                
-                .faq-question {
-                    padding: 14px 16px;
-                    font-size: 14px;
-                }
-                
-                .faq-icon {
-                    width: 28px;
-                    height: 28px;
-                }
-                
-                .faq-answer-content {
-                    padding: 0 16px 16px 16px;
-                    font-size: 13px;
-                }
+                .faq-section { padding: 40px 0 30px; }
+                .faq-title { font-size: 22px; }
+                .faq-question { padding: 14px 16px; font-size: 14px; gap: 12px; }
+                .faq-num { min-width: 26px; height: 26px; font-size: 12px; }
+                .faq-answer-content { padding: 14px 16px 18px 54px; font-size: 14px; }
             }
-            
+
             @media (max-width: 479.98px) {
-                .faq-section {
-                    padding: 20px 0;
-                }
-                
-                .faq-title {
-                    font-size: 20px;
-                }
-                
-                .faq-question {
-                    padding: 12px 14px;
-                    font-size: 13px;
-                }
-                
-                .faq-question-text {
-                    padding-right: 12px;
-                }
-                
-                .faq-answer-content {
-                    padding: 0 14px 14px 14px;
-                }
+                .faq-answer-content { padding-left: 16px; }
+                .faq-num { display: none; }
             }
         </style>
 
@@ -248,15 +230,15 @@ class FaqWidget
             function toggleFaq(button) {
                 const item = button.closest('.faq-item');
                 const isActive = item.classList.contains('active');
-                
-                // Закрываем все остальные (опционально, можно убрать для множественного открытия)
+
                 document.querySelectorAll('.faq-item').forEach(i => {
                     i.classList.remove('active');
+                    i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
                 });
-                
-                // Если не был активен, открываем текущий
+
                 if (!isActive) {
                     item.classList.add('active');
+                    button.setAttribute('aria-expanded', 'true');
                 }
             }
         </script>
