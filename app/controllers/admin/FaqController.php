@@ -55,10 +55,10 @@ class FaqController extends AppController
 
         $this->setMeta('Добавить вопрос - Админ панель');
         
-        // Получаем списки для селектов
-        $categories = R::findAll('category', 'status = 1 ORDER BY title ASC');
-        $brands = R::findAll('brand', 'status = 1 ORDER BY title ASC');
-        $products = R::findAll('product', 'status = 1 ORDER BY title ASC LIMIT 100');
+        // Получаем списки для селектов с slug'ами
+        $categories = R::getAll("SELECT id, title, slug FROM category WHERE status = 1 ORDER BY title ASC");
+        $brands = R::getAll("SELECT id, title, slug FROM brand WHERE status = 1 ORDER BY title ASC");
+        $products = R::getAll("SELECT id, title, slug FROM product WHERE status = 1 ORDER BY title ASC LIMIT 100");
         
         $this->set(compact('categories', 'brands', 'products'));
     }
@@ -94,10 +94,10 @@ class FaqController extends AppController
 
         $this->setMeta('Редактировать вопрос - Админ панель');
         
-        // Получаем списки для селектов
-        $categories = R::findAll('category', 'status = 1 ORDER BY title ASC');
-        $brands = R::findAll('brand', 'status = 1 ORDER BY title ASC');
-        $products = R::findAll('product', 'status = 1 ORDER BY title ASC LIMIT 100');
+        // Получаем списки для селектов с slug'ами
+        $categories = R::getAll("SELECT id, title, slug FROM category WHERE status = 1 ORDER BY title ASC");
+        $brands = R::getAll("SELECT id, title, slug FROM brand WHERE status = 1 ORDER BY title ASC");
+        $products = R::getAll("SELECT id, title, slug FROM product WHERE status = 1 ORDER BY title ASC LIMIT 100");
         
         $this->set(compact('faq', 'categories', 'brands', 'products'));
     }
