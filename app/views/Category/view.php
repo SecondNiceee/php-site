@@ -127,11 +127,11 @@
                
                <div class="catalogpage__brand brand">
                <?php foreach($brands as $brand): ?>
-                  <a href="category/<?=$category['slug']?>?brand=<?=$brand['id'] ?>" class="brand__item" <?php if(isset($_GET['brand']) && $_GET['brand'] == $brand['id']) echo 'style="border:1px solid #858585;"';?>>
+                  <a href="category/<?=$category['slug']?>/<?=$brand['slug'] ?>" class="brand__item" <?php if(isset($get_brand) && $get_brand == $brand['id']) echo 'style="border:1px solid #858585;"';?>>
                      <img src="<?= PATH . $brand['img']?>" alt="" class="brand__img">
                   </a>
                <?php endforeach;?>
-               <?php if(isset($_GET['brand'])) :?>
+               <?php if(!empty($get_brand)) :?>
                   <a href="category/<?=$category['slug']?>" class="brand__item" style="
                      color: #000;
                      font-size: 16px;
