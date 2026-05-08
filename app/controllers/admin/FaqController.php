@@ -43,13 +43,13 @@ class FaqController extends AppController
             if (!empty($_POST['entity_slug']) && !empty($_POST['entity_type'])) {
                 $_POST['entity_id'] = $this->model->getEntityIdBySlug($_POST['entity_type'], $_POST['entity_slug']);
                 if ($_POST['entity_id'] == 0 && $_POST['entity_type'] !== 'main') {
-                    $this->session->flash('error', 'Сущность с таким slug не найдена');
+                    $_SESSION['errors'] = 'Сущность с таким slug не найдена';
                     redirect(ADMIN . '/faq/add');
                 }
             }
             
             $id = $this->model->save($_POST);
-            $this->session->flash('success', 'Вопрос добавлен');
+            $_SESSION['success'] = 'Вопрос добавлен';
             redirect(ADMIN . '/faq');
         }
 
@@ -75,20 +75,20 @@ class FaqController extends AppController
             if (!empty($_POST['entity_slug']) && !empty($_POST['entity_type'])) {
                 $_POST['entity_id'] = $this->model->getEntityIdBySlug($_POST['entity_type'], $_POST['entity_slug']);
                 if ($_POST['entity_id'] == 0 && $_POST['entity_type'] !== 'main') {
-                    $this->session->flash('error', 'Сущность с таким slug не найдена');
+                    $_SESSION['errors'] = 'Сущность с таким slug не найдена';
                     redirect(ADMIN . '/faq/edit/' . $id);
                 }
             }
             
             $_POST['id'] = $id;
             $this->model->save($_POST);
-            $this->session->flash('success', 'Вопрос обновлен');
+            $_SESSION['success'] = 'Вопрос обновлен';
             redirect(ADMIN . '/faq');
         }
 
         $faq = $this->model->getById($id);
         if (!$faq) {
-            $this->session->flash('error', 'Вопрос не найден');
+            $_SESSION['errors'] = 'Вопрос не найден';
             redirect(ADMIN . '/faq');
         }
 
@@ -109,7 +109,7 @@ class FaqController extends AppController
     {
         $id = $this->route['id'];
         $this->model->delete($id);
-        $this->session->flash('success', 'Вопрос удален');
+        $_SESSION['success'] = 'Вопрос удален';
         redirect(ADMIN . '/faq');
     }
 }
