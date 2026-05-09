@@ -182,17 +182,16 @@ class FaqWidget
             }
 
             .faq-item__answer {
-                display: grid;
-                grid-template-rows: 0fr;
-                transition: grid-template-rows 0.3s ease;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease;
             }
 
             .faq-item.active .faq-item__answer {
-                grid-template-rows: 1fr;
+                max-height: 1000px;
             }
 
             .faq-item__answer-inner {
-                overflow: hidden;
                 padding: 0 20px 0 64px;
                 color: #445060;
                 line-height: 1.7;

@@ -62,6 +62,9 @@
                   }
                </style>
                <?php endif; ?>
+               
+               <!-- Блок Вопросы-Ответы -->
+               <?= \app\widgets\FaqWidget::render('main', 0) ?>
             </div>
          </section>
 
