@@ -2,6 +2,7 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Category;
+use app\models\admin\Faq;
 use RedBeanPHP\R;
 use shop\App;
 use shop\Cache;
@@ -62,6 +63,27 @@ class CategoryController extends AppController
    public function editAction()
     {
         $id = get('id');
+        $faqModel = new Faq();
+
+        // Сохранение FAQ
+        if (!empty($_POST['faq_action'])) {
+            if ($_POST['faq_action'] === 'add' && !empty($_POST['faq_question'])) {
+                $faqModel->save([
+                    'entity_type' => 'category',
+                    'entity_id'   => $id,
+                    'question'    => $_POST['faq_question'],
+                    'answer'      => $_POST['faq_answer'] ?? '',
+                    'sort_order'  => (int)($_POST['faq_sort_order'] ?? 0),
+                    'status'      => 1,
+                ]);
+                $_SESSION['success'] = 'FAQ добавлен';
+            } elseif ($_POST['faq_action'] === 'delete' && !empty($_POST['faq_id'])) {
+                $faqModel->delete((int)$_POST['faq_id']);
+                $_SESSION['success'] = 'FAQ удален';
+            }
+            redirect();
+        }
+
         if (!empty($_POST)) {
             if ($this->model->category_validate()) {
                if ($this->model->update_category($id)) {
@@ -78,10 +100,11 @@ class CategoryController extends AppController
         if (!$category) {
             throw new \Exception('Not found category', 404);
         }
+        $faqs = $faqModel->getFaqByEntity('category', $id);
         App::$app->setProperty('parent_id', $category['parent_id']);
         $title = 'Редактирование категории';
         $this->setMeta($title);
-        $this->set(compact('title', 'category'));
+        $this->set(compact('title', 'category', 'faqs'));
     }
 
    public function duplicateAction()
