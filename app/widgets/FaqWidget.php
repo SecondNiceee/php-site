@@ -22,27 +22,31 @@ class FaqWidget
         
         ob_start();
         ?>
-        <div class="faq-section">
-            <div class="container">
-                <div class="faq-header">
-                    <span class="faq-badge">FAQ</span>
-                    <h2 class="faq-title">Вопросы и ответы</h2>
-                    <p class="faq-subtitle">Ответы на часто задаваемые вопросы</p>
+        <section class="faq-section">
+            <div class="faq-section__container">
+                <div class="faq-section__header">
+                    <h4>Вопросы и ответы</h4>
+                    <p class="faq-section__subtitle">Ответы на часто задаваемые вопросы</p>
                 </div>
-                <div class="faq-accordion">
+                <div class="faq-section__list" id="faqAccordion">
                     <?php foreach ($faqs as $index => $faq): ?>
-                        <div class="faq-item">
-                            <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
-                                <span class="faq-num"><?= $index + 1 ?></span>
-                                <span class="faq-question-text"><?= htmlspecialchars($faq['question']) ?></span>
-                                <span class="faq-icon">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3 6L8 11L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <div class="faq-item" id="faq-item-<?= $index ?>">
+                            <button
+                                class="faq-item__question"
+                                onclick="toggleFaqItem(<?= $index ?>)"
+                                aria-expanded="false"
+                                aria-controls="faq-answer-<?= $index ?>"
+                            >
+                                <span class="faq-item__num"><?= $index + 1 ?></span>
+                                <span class="faq-item__text"><?= htmlspecialchars($faq['question']) ?></span>
+                                <span class="faq-item__icon">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M2 5L7 10L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </span>
                             </button>
-                            <div class="faq-answer">
-                                <div class="faq-answer-content">
+                            <div class="faq-item__answer" id="faq-answer-<?= $index ?>">
+                                <div class="faq-item__answer-inner">
                                     <?= $faq['answer'] ?>
                                 </div>
                             </div>
@@ -50,7 +54,7 @@ class FaqWidget
                     <?php endforeach; ?>
                 </div>
             </div>
-        </div>
+        </section>
 
         <style>
             .faq-section {
@@ -60,67 +64,59 @@ class FaqWidget
                 margin-top: 40px;
             }
 
-            .faq-header {
+            .faq-section__container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 15px;
+            }
+
+            .faq-section__header {
                 text-align: center;
-                margin-bottom: 40px;
+                margin-bottom: 36px;
             }
 
-            .faq-badge {
-                display: inline-block;
-                background: #082a43;
-                color: #fff;
-                font-size: 11px;
-                font-weight: 700;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                padding: 4px 12px;
-                border-radius: 20px;
-                margin-bottom: 14px;
-            }
-
-            .faq-title {
-                font-size: 26px;
+            .faq-section__header h4 {
+                font-size: 24px;
                 font-weight: 700;
                 color: #082a43;
-                margin: 0 0 8px;
-                line-height: 1.3;
+                margin-bottom: 8px;
             }
 
-            .faq-subtitle {
+            .faq-section__subtitle {
                 font-size: 15px;
                 color: #6b7a8d;
                 margin: 0;
             }
 
-            .faq-accordion {
-                max-width: 820px;
+            .faq-section__list {
+                max-width: 840px;
                 margin: 0 auto;
             }
 
             .faq-item {
                 background: #ffffff;
-                border-radius: 10px;
+                border-radius: 8px;
                 margin-bottom: 8px;
                 border: 1px solid #e8edf2;
                 overflow: hidden;
-                transition: border-color 0.25s ease, box-shadow 0.25s ease;
+                transition: border-color 0.25s, box-shadow 0.25s;
             }
 
             .faq-item:hover {
-                border-color: #c5d4e8;
+                border-color: #c5cdd8;
                 box-shadow: 0 4px 16px rgba(8, 42, 67, 0.07);
             }
 
             .faq-item.active {
-                border-color: #2f72cf;
-                box-shadow: 0 4px 20px rgba(47, 114, 207, 0.12);
+                border-color: #e8282f;
+                box-shadow: 0 4px 20px rgba(232, 40, 47, 0.10);
             }
 
-            .faq-question {
+            .faq-item__question {
                 width: 100%;
                 display: flex;
                 align-items: center;
-                gap: 16px;
+                gap: 14px;
                 padding: 18px 20px;
                 background: none;
                 border: none;
@@ -129,19 +125,19 @@ class FaqWidget
                 font-size: 15px;
                 font-weight: 600;
                 color: #082a43;
-                font-family: inherit;
-                transition: background 0.2s ease;
+                font-family: Ubuntu, sans-serif;
+                transition: background 0.2s;
             }
 
-            .faq-question:hover {
+            .faq-item__question:hover {
                 background: #f7f9fc;
             }
 
-            .faq-item.active .faq-question {
-                background: #f0f5ff;
+            .faq-item.active .faq-item__question {
+                background: #fff5f5;
             }
 
-            .faq-num {
+            .faq-item__num {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -149,24 +145,24 @@ class FaqWidget
                 height: 30px;
                 border-radius: 50%;
                 background: #eef2f8;
-                color: #2f72cf;
+                color: #082a43;
                 font-size: 13px;
                 font-weight: 700;
                 flex-shrink: 0;
-                transition: background 0.25s ease, color 0.25s ease;
+                transition: background 0.25s, color 0.25s;
             }
 
-            .faq-item.active .faq-num {
-                background: #2f72cf;
+            .faq-item.active .faq-item__num {
+                background: #e8282f;
                 color: #fff;
             }
 
-            .faq-question-text {
+            .faq-item__text {
                 flex: 1;
                 line-height: 1.4;
             }
 
-            .faq-icon {
+            .faq-item__icon {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -174,78 +170,76 @@ class FaqWidget
                 height: 28px;
                 border-radius: 50%;
                 background: #eef2f8;
-                color: #2f72cf;
+                color: #082a43;
                 flex-shrink: 0;
-                transition: background 0.25s ease, transform 0.3s ease;
+                transition: background 0.25s, color 0.25s, transform 0.3s;
             }
 
-            .faq-item.active .faq-icon {
-                background: #2f72cf;
+            .faq-item.active .faq-item__icon {
+                background: #e8282f;
                 color: #fff;
                 transform: rotate(180deg);
             }
 
-            .faq-answer {
+            .faq-item__answer {
                 display: grid;
                 grid-template-rows: 0fr;
-                transition: grid-template-rows 0.3s ease-out;
+                transition: grid-template-rows 0.3s ease;
             }
 
-            .faq-item.active .faq-answer {
+            .faq-item.active .faq-item__answer {
                 grid-template-rows: 1fr;
             }
 
-            .faq-answer > .faq-answer-content {
+            .faq-item__answer-inner {
                 overflow: hidden;
-            }
-
-            .faq-answer-content {
-                padding: 0 20px 22px 66px;
+                padding: 0 20px 0 64px;
                 color: #445060;
                 line-height: 1.7;
                 font-size: 15px;
             }
-            
-            .faq-item.active .faq-answer-content {
-                border-top: 1px solid #eef2f8;
-                padding-top: 16px;
+
+            .faq-item.active .faq-item__answer-inner {
+                padding-bottom: 20px;
+                padding-top: 14px;
+                border-top: 1px solid #f0f0f0;
             }
 
-            .faq-answer-content p { margin-bottom: 12px; }
-            .faq-answer-content p:last-child { margin-bottom: 0; }
-            .faq-answer-content ul,
-            .faq-answer-content ol { margin: 12px 0; padding-left: 20px; }
-            .faq-answer-content li { margin-bottom: 6px; }
-            .faq-answer-content a { color: #2f72cf; text-decoration: underline; }
-            .faq-answer-content a:hover { color: #1e5bb0; }
+            .faq-item__answer-inner p { margin-bottom: 10px; }
+            .faq-item__answer-inner p:last-child { margin-bottom: 0; }
+            .faq-item__answer-inner ul,
+            .faq-item__answer-inner ol { margin: 10px 0; padding-left: 20px; }
+            .faq-item__answer-inner li { margin-bottom: 6px; list-style: disc; }
+            .faq-item__answer-inner a { color: #e8282f; text-decoration: underline; }
+            .faq-item__answer-inner a:hover { color: #b81e24; }
 
-            @media (max-width: 767.98px) {
+            @media (max-width: 767px) {
                 .faq-section { padding: 40px 0 30px; }
-                .faq-title { font-size: 22px; }
-                .faq-question { padding: 14px 16px; font-size: 14px; gap: 12px; }
-                .faq-num { min-width: 26px; height: 26px; font-size: 12px; }
-                .faq-answer-content { padding: 14px 16px 18px 54px; font-size: 14px; }
+                .faq-item__question { padding: 14px 16px; font-size: 14px; gap: 10px; }
+                .faq-item__num { min-width: 26px; height: 26px; font-size: 12px; }
+                .faq-item__answer-inner { padding-left: 52px; font-size: 14px; }
             }
 
-            @media (max-width: 479.98px) {
-                .faq-answer-content { padding-left: 16px; }
-                .faq-num { display: none; }
+            @media (max-width: 479px) {
+                .faq-item__answer-inner { padding-left: 16px; }
+                .faq-item__num { display: none; }
             }
         </style>
 
         <script>
-            function toggleFaq(button) {
-                const item = button.closest('.faq-item');
-                const isActive = item.classList.contains('active');
+            function toggleFaqItem(index) {
+                var item = document.getElementById('faq-item-' + index);
+                var btn = item.querySelector('.faq-item__question');
+                var isActive = item.classList.contains('active');
 
-                document.querySelectorAll('.faq-item').forEach(i => {
+                document.querySelectorAll('.faq-item').forEach(function(i) {
                     i.classList.remove('active');
-                    i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                    i.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
                 });
 
                 if (!isActive) {
                     item.classList.add('active');
-                    button.setAttribute('aria-expanded', 'true');
+                    btn.setAttribute('aria-expanded', 'true');
                 }
             }
         </script>
