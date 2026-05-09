@@ -181,7 +181,10 @@
             </div>
          </section> -->
 
-         <!-- Блок Вопросы-Ответы -->
+         <!-- Блок Вопросы-Ответы для товара -->
          <?= \app\widgets\FaqWidget::render('product', $product['id']) ?>
+         
+         <!-- Блок Вопросы-Ответы общий -->
+         <?= \app\widgets\FaqWidget::render('main', 0) ?>
 
       </main>
