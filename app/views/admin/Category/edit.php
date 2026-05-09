@@ -124,6 +124,64 @@
                               </div>
                               <button type="submit" class="btn btn-primary">Сохранить</button>
                            </form>
+
+                           <!-- FAQ секция -->
+                           <div class="card mt-4 mb-4">
+                              <div class="card-header d-flex align-items-center justify-content-between">
+                                 <span><i class="fas fa-question-circle me-2"></i>FAQ для этой категории</span>
+                              </div>
+                              <div class="card-body">
+                                 <?php if (!empty($faqs)): ?>
+                                    <table class="table table-bordered table-sm mb-4">
+                                       <thead>
+                                          <tr>
+                                             <th>#</th>
+                                             <th>Вопрос</th>
+                                             <th>Ответ</th>
+                                             <th width="60"></th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          <?php foreach ($faqs as $faq): ?>
+                                             <tr>
+                                                <td><?= (int)$faq['id'] ?></td>
+                                                <td><?= h($faq['question']) ?></td>
+                                                <td><?= h(mb_strimwidth(strip_tags($faq['answer']), 0, 80, '...')) ?></td>
+                                                <td>
+                                                   <form method="post" action="" onsubmit="return confirm('Удалить этот вопрос?')">
+                                                      <input type="hidden" name="faq_action" value="delete">
+                                                      <input type="hidden" name="faq_id" value="<?= (int)$faq['id'] ?>">
+                                                      <button type="submit" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></button>
+                                                   </form>
+                                                </td>
+                                             </tr>
+                                          <?php endforeach; ?>
+                                       </tbody>
+                                    </table>
+                                 <?php else: ?>
+                                    <p class="text-muted">FAQ для этой категории не добавлены.</p>
+                                 <?php endif; ?>
+
+                                 <hr>
+                                 <h6 class="mb-3">Добавить вопрос</h6>
+                                 <form method="post" action="">
+                                    <input type="hidden" name="faq_action" value="add">
+                                    <div class="mb-3">
+                                       <label>Вопрос</label>
+                                       <input type="text" name="faq_question" class="form-control" placeholder="Введите вопрос" required>
+                                    </div>
+                                    <div class="mb-3">
+                                       <label>Ответ</label>
+                                       <textarea name="faq_answer" class="form-control" rows="3" placeholder="Введите ответ"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                       <label>Порядок сортировки</label>
+                                       <input type="number" name="faq_sort_order" class="form-control" value="0" style="max-width:120px;">
+                                    </div>
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-plus me-1"></i>Добавить FAQ</button>
+                                 </form>
+                              </div>
+                           </div>
                            
                         </div>
 
