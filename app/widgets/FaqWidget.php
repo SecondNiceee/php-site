@@ -235,15 +235,19 @@ class FaqWidget
                 
                 var btn = item.querySelector('.faq-item__question');
                 var isActive = item.classList.contains('active');
+                var activeItem = document.querySelector('.faq-item.active');
 
-                document.querySelectorAll('.faq-item').forEach(function(i) {
-                    i.classList.remove('active');
-                    i.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
-                });
+                if (activeItem && activeItem !== item) {
+                    activeItem.classList.remove('active');
+                    activeItem.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
+                }
 
                 if (!isActive) {
                     item.classList.add('active');
                     btn.setAttribute('aria-expanded', 'true');
+                } else {
+                    item.classList.remove('active');
+                    btn.setAttribute('aria-expanded', 'false');
                 }
             }
         </script>
