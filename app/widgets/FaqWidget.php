@@ -198,12 +198,14 @@ class FaqWidget
                 color: #445060;
                 line-height: 1.7;
                 font-size: 15px;
+                transition: padding 0.35s ease-out, border-color 0.35s ease-out;
+                border-top: 1px solid transparent;
             }
 
             .faq-item.active .faq-item__answer-inner {
                 padding-bottom: 20px;
                 padding-top: 14px;
-                border-top: 1px solid #f0f0f0;
+                border-top-color: #f0f0f0;
             }
 
             .faq-item__answer-inner p { margin-bottom: 10px; }
