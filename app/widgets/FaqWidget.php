@@ -185,10 +185,11 @@ class FaqWidget
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.4s ease;
+                display: block;
             }
 
             .faq-item.active .faq-item__answer {
-                max-height: 1000px;
+                max-height: 1500px;
             }
 
             .faq-item__answer-inner {
@@ -196,6 +197,7 @@ class FaqWidget
                 color: #445060;
                 line-height: 1.7;
                 font-size: 15px;
+                display: block;
             }
 
             .faq-item.active .faq-item__answer-inner {
