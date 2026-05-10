@@ -20,6 +20,7 @@ class FaqWidget
             return '';
         }
         
+        $prefix = $type . '-' . $id;
         ob_start();
         ?>
         <section class="faq-section">
@@ -28,14 +29,14 @@ class FaqWidget
                     <h4>Вопросы и ответы</h4>
                     <p class="faq-section__subtitle">Ответы на часто задаваемые вопросы</p>
                 </div>
-                <div class="faq-section__list" id="faqAccordion">
+                <div class="faq-section__list" id="faqAccordion-<?= $prefix ?>">
                     <?php foreach ($faqs as $index => $faq): ?>
-                        <div class="faq-item" id="faq-item-<?= $index ?>">
+                        <div class="faq-item" id="faq-item-<?= $prefix ?>-<?= $index ?>">
                             <button
                                 class="faq-item__question"
-                                onclick="toggleFaqItem(<?= $index ?>)"
+                                onclick="toggleFaqItem('<?= $prefix ?>-<?= $index ?>')"
                                 aria-expanded="false"
-                                aria-controls="faq-answer-<?= $index ?>"
+                                aria-controls="faq-answer-<?= $prefix ?>-<?= $index ?>"
                             >
                                 <span class="faq-item__num"><?= $index + 1 ?></span>
                                 <span class="faq-item__text"><?= htmlspecialchars($faq['question']) ?></span>
@@ -45,7 +46,7 @@ class FaqWidget
                                     </svg>
                                 </span>
                             </button>
-                            <div class="faq-item__answer" id="faq-answer-<?= $index ?>">
+                            <div class="faq-item__answer" id="faq-answer-<?= $prefix ?>-<?= $index ?>">
                                 <div class="faq-item__answer-inner">
                                     <?= $faq['answer'] ?>
                                 </div>
@@ -228,8 +229,10 @@ class FaqWidget
         </style>
 
         <script>
-            function toggleFaqItem(index) {
-                var item = document.getElementById('faq-item-' + index);
+            function toggleFaqItem(itemId) {
+                var item = document.getElementById('faq-item-' + itemId);
+                if (!item) return;
+                
                 var btn = item.querySelector('.faq-item__question');
                 var isActive = item.classList.contains('active');
 
