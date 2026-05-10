@@ -241,31 +241,18 @@ class FaqWidget
                 var activeItem = document.querySelector('.faq-item.active');
                 if (activeItem && activeItem !== item) {
                     var otherAnswer = activeItem.querySelector('.faq-item__answer');
-                    otherAnswer.style.maxHeight = otherAnswer.scrollHeight + 'px';
+                    otherAnswer.style.maxHeight = '0';
                     activeItem.classList.remove('active');
                     activeItem.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
-                    // Форсируем рефлоу
-                    void otherAnswer.offsetHeight;
-                    otherAnswer.style.maxHeight = '0';
                 }
 
                 if (!isActive) {
-                    // Открываем: сначала задаём текущую высоту, потом — полную
+                    // Открываем
                     answer.style.maxHeight = answer.scrollHeight + 'px';
                     item.classList.add('active');
                     btn.setAttribute('aria-expanded', 'true');
-                    
-                    // После анимации убираем фиксированную высоту (опционально)
-                    answer.addEventListener('transitionend', function handler() {
-                        if (item.classList.contains('active')) {
-                            answer.style.maxHeight = 'none';
-                        }
-                        answer.removeEventListener('transitionend', handler);
-                    });
                 } else {
-                    // Закрываем: фиксируем текущую высоту, затем сворачиваем
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    void answer.offsetHeight; // рефлоу
+                    // Закрываем
                     answer.style.maxHeight = '0';
                     item.classList.remove('active');
                     btn.setAttribute('aria-expanded', 'false');
