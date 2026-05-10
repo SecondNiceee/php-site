@@ -240,20 +240,16 @@ class FaqWidget
                 // Закрываем другой активный элемент
                 var activeItem = document.querySelector('.faq-item.active');
                 if (activeItem && activeItem !== item) {
-                    var otherAnswer = activeItem.querySelector('.faq-item__answer');
-                    otherAnswer.style.maxHeight = '0';
                     activeItem.classList.remove('active');
                     activeItem.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
                 }
 
                 if (!isActive) {
-                    // Открываем
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    // Открываем - просто добавляем класс, CSS сделает остальное
                     item.classList.add('active');
                     btn.setAttribute('aria-expanded', 'true');
                 } else {
                     // Закрываем
-                    answer.style.maxHeight = '0';
                     item.classList.remove('active');
                     btn.setAttribute('aria-expanded', 'false');
                 }
