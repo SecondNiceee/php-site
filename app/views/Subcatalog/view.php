@@ -64,7 +64,7 @@
                <?php endif; ?>
                
                <!-- Блок Вопросы-Ответы -->
-               <?= \app\widgets\FaqWidget::render('main', 0) ?>
+               <?= \app\widgets\FaqWidget::render('subcatalog', $category['id']) ?>
             </div>
          </section>
 
