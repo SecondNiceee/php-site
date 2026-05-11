@@ -1,5 +1,3 @@
-
-
 <div class="page-header">
     <h1>Вопросы и ответы</h1>
     <a href="<?= ADMIN ?>/faq/add" class="btn btn-primary">
@@ -11,18 +9,15 @@
 <div class="filters mb-3 p-3 bg-light rounded">
     <form method="get" action="" class="row g-3">
         <div class="col-md-4">
-            <label class="form-label">Тип сущности</label>
+            <label class="form-label">Тип страницы</label>
             <select name="type" class="form-select">
                 <option value="">Все типы</option>
                 <option value="main" <?= $type == 'main' ? 'selected' : '' ?>>Главная страница</option>
+                <option value="subcatalog" <?= $type == 'subcatalog' ? 'selected' : '' ?>>Категория (/subcatalog/)</option>
+                <option value="category" <?= $type == 'category' ? 'selected' : '' ?>>Подкатегория (/category/)</option>
                 <option value="product" <?= $type == 'product' ? 'selected' : '' ?>>Товары</option>
-                <option value="category" <?= $type == 'category' ? 'selected' : '' ?>>Категории</option>
                 <option value="brand" <?= $type == 'brand' ? 'selected' : '' ?>>Бренды</option>
             </select>
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">ID сущности</label>
-            <input type="number" name="entity_id" class="form-control" value="<?= htmlspecialchars($entityId) ?>" placeholder="Например: 12">
         </div>
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-secondary me-2">Фильтр</button>
@@ -39,7 +34,7 @@
                 <th style="width: 50px;">ID</th>
                 <th>Вопрос</th>
                 <th>Ответ</th>
-                <th>Сущность</th>
+                <th>Страница</th>
                 <th style="width: 80px;">Порядок</th>
                 <th style="width: 80px;">Статус</th>
                 <th style="width: 150px;">Действия</th>
@@ -52,22 +47,50 @@
                 </tr>
             <?php else: ?>
                 <?php foreach ($faqs as $faq): ?>
+                    <?php 
+                        // Формируем URL страницы
+                        $pageUrl = '/';
+                        $pageTypeLabel = 'Главная';
+                        
+                        switch ($faq['entity_type']) {
+                            case 'main':
+                                $pageUrl = '/';
+                                $pageTypeLabel = 'Главная';
+                                break;
+                            case 'subcatalog':
+                                $pageUrl = '/subcatalog/...';
+                                $pageTypeLabel = 'Категория';
+                                break;
+                            case 'category':
+                                $pageUrl = '/category/...';
+                                $pageTypeLabel = 'Подкатегория';
+                                break;
+                            case 'product':
+                                $pageUrl = '/product/...';
+                                $pageTypeLabel = 'Товар';
+                                break;
+                            case 'brand':
+                                $pageUrl = '/brand/...';
+                                $pageTypeLabel = 'Бренд';
+                                break;
+                        }
+                    ?>
                     <tr>
                         <td><?= $faq['id'] ?></td>
                         <td>
-                            <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <?= strip_tags($faq['question']) ?>
                             </div>
                         </td>
                         <td>
-                            <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <?= strip_tags($faq['answer']) ?>
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-info"><?= $faq['entity_type'] ?></span>
+                            <span class="badge bg-info"><?= $pageTypeLabel ?></span>
                             <br>
-                            <small><?= htmlspecialchars($faq['entity_title']) ?></small>
+                            <small class="text-muted"><?= htmlspecialchars($faq['entity_title']) ?></small>
                         </td>
                         <td><?= $faq['sort_order'] ?></td>
                         <td>
@@ -83,7 +106,7 @@
                             </a>
                             <a href="<?= ADMIN ?>/faq/delete?id=<?= $faq['id'] ?>" 
                                class="btn btn-sm btn-danger"
-                               onclick="return confirm('Вы уверены?')">
+                               onclick="return confirm('Удалить этот вопрос?')">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

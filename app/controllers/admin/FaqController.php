@@ -39,15 +39,6 @@ class FaqController extends AppController
     public function addAction()
     {
         if (!empty($_POST)) {
-            // Если передан slug вместо entity_id, конвертируем его в ID
-            if (!empty($_POST['entity_slug']) && !empty($_POST['entity_type'])) {
-                $_POST['entity_id'] = $this->model->getEntityIdBySlug($_POST['entity_type'], $_POST['entity_slug']);
-                if ($_POST['entity_id'] == 0 && $_POST['entity_type'] !== 'main') {
-                    $_SESSION['errors'] = 'Сущность с таким slug не найдена';
-                    redirect(ADMIN . '/faq/add');
-                }
-            }
-            
             $id = $this->model->save($_POST);
             $_SESSION['success'] = 'Вопрос добавлен';
             redirect(ADMIN . '/faq');
@@ -55,8 +46,8 @@ class FaqController extends AppController
 
         $this->setMeta('Добавить вопрос - Админ панель');
         
-        // Получаем списки для селектов с slug'ами
-        $categories = R::getAll("SELECT id, title, slug FROM category WHERE status = 1 ORDER BY title ASC");
+        // Категории с parent_id для разделения на категории/подкатегории
+        $categories = R::getAll("SELECT id, title, slug, parent_id FROM category WHERE status = 1 ORDER BY parent_id ASC, title ASC");
         $brands = R::getAll("SELECT id, title, slug FROM brand WHERE status = 1 ORDER BY title ASC");
         $products = R::getAll("SELECT id, title, slug FROM product WHERE status = 1 ORDER BY title ASC LIMIT 100");
         
@@ -71,15 +62,6 @@ class FaqController extends AppController
         $id = get('id');
         
         if (!empty($_POST)) {
-            // Если передан slug вместо entity_id, конвертируем его в ID
-            if (!empty($_POST['entity_slug']) && !empty($_POST['entity_type'])) {
-                $_POST['entity_id'] = $this->model->getEntityIdBySlug($_POST['entity_type'], $_POST['entity_slug']);
-                if ($_POST['entity_id'] == 0 && $_POST['entity_type'] !== 'main') {
-                    $_SESSION['errors'] = 'Сущность с таким slug не найдена';
-                    redirect(ADMIN . '/faq/edit/' . $id);
-                }
-            }
-            
             $_POST['id'] = $id;
             $this->model->save($_POST);
             $_SESSION['success'] = 'Вопрос обновлен';
@@ -94,8 +76,8 @@ class FaqController extends AppController
 
         $this->setMeta('Редактировать вопрос - Админ панель');
         
-        // Получаем списки для селектов с slug'ами
-        $categories = R::getAll("SELECT id, title, slug FROM category WHERE status = 1 ORDER BY title ASC");
+        // Категории с parent_id для разделения на категории/подкатегории
+        $categories = R::getAll("SELECT id, title, slug, parent_id FROM category WHERE status = 1 ORDER BY parent_id ASC, title ASC");
         $brands = R::getAll("SELECT id, title, slug FROM brand WHERE status = 1 ORDER BY title ASC");
         $products = R::getAll("SELECT id, title, slug FROM product WHERE status = 1 ORDER BY title ASC LIMIT 100");
         
