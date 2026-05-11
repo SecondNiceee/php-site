@@ -68,8 +68,12 @@ class CategoryController extends AppController
         // Сохранение FAQ
         if (!empty($_POST['faq_action'])) {
             if ($_POST['faq_action'] === 'add' && !empty($_POST['faq_question'])) {
+                // Определяем тип: subcatalog для категорий верхнего уровня, category для подкатегорий
+                $category = $this->model->get_category($id);
+                $entityType = ($category && $category['parent_id'] == 0) ? 'subcatalog' : 'category';
+                
                 $faqModel->save([
-                    'entity_type' => 'category',
+                    'entity_type' => $entityType,
                     'entity_id'   => $id,
                     'question'    => $_POST['faq_question'],
                     'answer'      => $_POST['faq_answer'] ?? '',
@@ -100,7 +104,9 @@ class CategoryController extends AppController
         if (!$category) {
             throw new \Exception('Not found category', 404);
         }
-        $faqs = $faqModel->getFaqByEntity('category', $id);
+        // Определяем тип для получения FAQ
+        $entityType = ($category['parent_id'] == 0) ? 'subcatalog' : 'category';
+        $faqs = $faqModel->getFaqByEntity($entityType, $id);
         App::$app->setProperty('parent_id', $category['parent_id']);
         $title = 'Редактирование категории';
         $this->setMeta($title);
