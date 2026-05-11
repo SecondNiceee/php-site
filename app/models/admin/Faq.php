@@ -97,6 +97,7 @@ class Faq
                 $item = R::findOne('product', 'id = ?', [$id]);
                 return $item ? $item['title'] : 'Товар не найден';
             case 'category':
+            case 'subcatalog':
                 $item = R::findOne('category', 'id = ?', [$id]);
                 return $item ? $item['title'] : 'Категория не найдена';
             case 'brand':

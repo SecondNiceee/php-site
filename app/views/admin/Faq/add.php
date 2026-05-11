@@ -1,4 +1,3 @@
-
 <div class="page-header">
     <h1><?= isset($faq) && !empty($faq['id']) ? 'Редактировать вопрос' : 'Добавить вопрос' ?></h1>
     <a href="<?= ADMIN ?>/faq" class="btn btn-secondary">
@@ -34,45 +33,48 @@
 
         <!-- Правая колонка -->
         <div class="col-md-4">
-            <!-- Привязка к сущности -->
+            <!-- Привязка к странице -->
             <div class="card mb-3">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">Привязка к странице</h5>
+                    <h5 class="mb-0">На какую страницу добавить?</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="entity_type" class="form-label required">Тип сущности *</label>
-                        <select name="entity_type" id="entity_type" class="form-select" required onchange="updateEntitySelect()">
-                            <option value="">Выберите тип</option>
+                        <label for="page_type" class="form-label required">Тип страницы *</label>
+                        <select name="page_type" id="page_type" class="form-select" required onchange="updatePageSelect()">
+                            <option value="">Выберите тип страницы</option>
                             <option value="main" <?= ($faq['entity_type'] ?? '') == 'main' ? 'selected' : '' ?>>Главная страница</option>
+                            <option value="subcatalog" <?= ($faq['entity_type'] ?? '') == 'subcatalog' ? 'selected' : '' ?>>Категория (родительская)</option>
+                            <option value="category" <?= ($faq['entity_type'] ?? '') == 'category' ? 'selected' : '' ?>>Подкатегория</option>
                             <option value="product" <?= ($faq['entity_type'] ?? '') == 'product' ? 'selected' : '' ?>>Товар</option>
-                            <option value="category" <?= ($faq['entity_type'] ?? '') == 'category' ? 'selected' : '' ?>>Категория</option>
                             <option value="brand" <?= ($faq['entity_type'] ?? '') == 'brand' ? 'selected' : '' ?>>Бренд</option>
                         </select>
+                        <small class="text-muted mt-1 d-block">
+                            <strong>Категория</strong> = /subcatalog/... <br>
+                            <strong>Подкатегория</strong> = /category/...
+                        </small>
                     </div>
 
-                    <div class="mb-3" id="entity_id_container" style="display: none;">
-                        <label for="entity_id" class="form-label">Сущность (по ID)</label>
-                        <select name="entity_id" id="entity_id" class="form-select">
-                            <option value="0">Не выбрано</option>
+                    <!-- Выбор конкретной страницы -->
+                    <div class="mb-3" id="page_select_container" style="display: none;">
+                        <label for="page_select" class="form-label">Выберите страницу *</label>
+                        <select name="page_select" id="page_select" class="form-select" onchange="updatePreview()">
+                            <option value="">Загрузка...</option>
                         </select>
-                        <small class="text-muted mt-1 d-block">Или введите slug ниже</small>
-                    </div>
-
-                    <div class="mb-3" id="entity_slug_container" style="display: none;">
-                        <label for="entity_slug" class="form-label">Slug сущности</label>
-                        <input type="text" name="entity_slug" id="entity_slug" class="form-control" placeholder="Например: kuhnya-galant" onchange="updatePreviewLink()" oninput="updatePreviewLink()">
-                        <small class="text-muted">Введите URL сущности (например, из адресной строки)</small>
                     </div>
 
                     <!-- Превью ссылки -->
-                    <div class="mb-3" id="preview_link_container" style="display: none;">
-                        <label class="form-label">Превью ссылки:</label>
-                        <div class="alert alert-info d-flex align-items-center" style="background-color: #e7f3ff; border-color: #b3d9ff; color: #004085; padding: 12px 15px; border-radius: 4px;">
-                            <i class="fa fa-link" style="margin-right: 10px; font-size: 16px;"></i>
-                            <code id="preview_link_text" style="background: none; color: inherit; padding: 0; font-size: 14px;">/ </code>
+                    <div id="preview_container" style="display: none;">
+                        <label class="form-label">Страница:</label>
+                        <div class="alert alert-success mb-0" style="padding: 10px 15px;">
+                            <i class="fa fa-link me-2"></i>
+                            <code id="preview_url" style="background: none; color: inherit;"></code>
                         </div>
                     </div>
+
+                    <!-- Скрытые поля для отправки -->
+                    <input type="hidden" name="entity_type" id="entity_type" value="<?= $faq['entity_type'] ?? '' ?>">
+                    <input type="hidden" name="entity_id" id="entity_id" value="<?= $faq['entity_id'] ?? 0 ?>">
 
                     <?php if (isset($faq)): ?>
                         <input type="hidden" name="id" value="<?= $faq['id'] ?>">
@@ -108,138 +110,120 @@
     </div>
 </form>
 
-<!-- Данные для JS -->
 <script>
-    const entitiesData = {
-        product: <?= json_encode(array_map(fn($p) => ['id' => $p['id'], 'title' => $p['title']], $products ?? [])) ?>,
-        category: <?= json_encode(array_map(fn($c) => ['id' => $c['id'], 'title' => $c['title']], $categories ?? [])) ?>,
-        brand: <?= json_encode(array_map(fn($b) => ['id' => $b['id'], 'title' => $b['title']], $brands ?? [])) ?>
-    };
-    
-const currentType = "<?= $faq['entity_type'] ?? '' ?>";
-const currentId = "<?= $faq['entity_id'] ?? 0 ?>";
-
-// Информация о slug для каждой сущности
-const entitySlugs = {
-    product: <?= json_encode(array_map(fn($p) => ['id' => $p['id'], 'slug' => $p['slug'] ?? ''], $products ?? [])) ?>,
-    category: <?= json_encode(array_map(fn($c) => ['id' => $c['id'], 'slug' => $c['slug'] ?? ''], $categories ?? [])) ?>,
-    brand: <?= json_encode(array_map(fn($b) => ['id' => $b['id'], 'slug' => $b['slug'] ?? ''], $brands ?? [])) ?>
+// Данные страниц
+const pagesData = {
+    // Категории (родительские) - /subcatalog/slug
+    subcatalog: <?= json_encode(array_values(array_filter(
+        array_map(fn($c) => ['id' => $c['id'], 'title' => $c['title'], 'slug' => $c['slug'], 'parent_id' => $c['parent_id']], $categories ?? []),
+        fn($c) => $c['parent_id'] == 0
+    ))) ?>,
+    // Подкатегории - /category/slug  
+    category: <?= json_encode(array_values(array_filter(
+        array_map(fn($c) => ['id' => $c['id'], 'title' => $c['title'], 'slug' => $c['slug'], 'parent_id' => $c['parent_id']], $categories ?? []),
+        fn($c) => $c['parent_id'] != 0
+    ))) ?>,
+    product: <?= json_encode(array_map(fn($p) => ['id' => $p['id'], 'title' => $p['title'], 'slug' => $p['slug']], $products ?? [])) ?>,
+    brand: <?= json_encode(array_map(fn($b) => ['id' => $b['id'], 'title' => $b['title'], 'slug' => $b['slug']], $brands ?? [])) ?>
 };
-</script>
 
-<script>
-function updateEntitySelect() {
-    const type = document.getElementById('entity_type').value;
-    const idContainer = document.getElementById('entity_id_container');
-    const slugContainer = document.getElementById('entity_slug_container');
-    const previewContainer = document.getElementById('preview_link_container');
-    const select = document.getElementById('entity_id');
+// Текущие значения (для редактирования)
+const currentEntityType = "<?= $faq['entity_type'] ?? '' ?>";
+const currentEntityId = <?= (int)($faq['entity_id'] ?? 0) ?>;
+
+// URL паттерны
+const urlPatterns = {
+    main: '/',
+    subcatalog: '/subcatalog/',
+    category: '/category/',
+    product: '/product/',
+    brand: '/brand/'
+};
+
+function updatePageSelect() {
+    const pageType = document.getElementById('page_type').value;
+    const selectContainer = document.getElementById('page_select_container');
+    const select = document.getElementById('page_select');
+    const previewContainer = document.getElementById('preview_container');
+    const entityType = document.getElementById('entity_type');
+    const entityId = document.getElementById('entity_id');
     
-    if (type === 'main') {
-        idContainer.style.display = 'none';
-        slugContainer.style.display = 'none';
+    // Маппинг page_type на entity_type для БД
+    // subcatalog и category оба хранятся как 'category' в БД, но с разным parent_id
+    if (pageType === 'subcatalog' || pageType === 'category') {
+        entityType.value = pageType; // Сохраняем subcatalog или category
+    } else {
+        entityType.value = pageType;
+    }
+    
+    if (pageType === 'main') {
+        selectContainer.style.display = 'none';
         previewContainer.style.display = 'block';
-        updatePreviewLink();
+        document.getElementById('preview_url').textContent = '/';
+        entityId.value = 0;
         return;
     }
     
-    if (!type || !entitiesData[type]) {
-        idContainer.style.display = 'none';
-        slugContainer.style.display = 'none';
+    if (!pageType || !pagesData[pageType]) {
+        selectContainer.style.display = 'none';
         previewContainer.style.display = 'none';
+        entityId.value = 0;
         return;
     }
-    
-    // Показываем контейнеры
-    idContainer.style.display = 'block';
-    slugContainer.style.display = 'block';
-    previewContainer.style.display = 'block';
     
     // Заполняем селект
-    select.innerHTML = '<option value="0">Выберите сущность (опционально)</option>';
+    select.innerHTML = '<option value="">Выберите страницу</option>';
     
-    entitiesData[type].forEach(item => {
+    pagesData[pageType].forEach(item => {
         const option = document.createElement('option');
-        option.value = item.id;
+        option.value = item.id + '|' + item.slug;
         option.textContent = item.title;
-        if (item.id == currentId && type === currentType) {
+        
+        // Выбираем текущее значение при редактировании
+        if (currentEntityType === pageType && currentEntityId == item.id) {
             option.selected = true;
         }
+        
         select.appendChild(option);
     });
     
-    updatePreviewLink();
+    selectContainer.style.display = 'block';
+    updatePreview();
 }
 
-function updatePreviewLink() {
-    const type = document.getElementById('entity_type').value;
-    const idSelect = document.getElementById('entity_id');
-    const slugInput = document.getElementById('entity_slug');
-    const previewText = document.getElementById('preview_link_text');
-    const previewContainer = document.getElementById('preview_link_container');
+function updatePreview() {
+    const pageType = document.getElementById('page_type').value;
+    const select = document.getElementById('page_select');
+    const previewContainer = document.getElementById('preview_container');
+    const previewUrl = document.getElementById('preview_url');
+    const entityId = document.getElementById('entity_id');
     
-    if (type === 'main') {
-        previewText.textContent = '/';
+    if (pageType === 'main') {
         previewContainer.style.display = 'block';
+        previewUrl.textContent = '/';
+        entityId.value = 0;
         return;
     }
     
-    if (!type) {
+    if (!select.value) {
         previewContainer.style.display = 'none';
+        entityId.value = 0;
         return;
     }
     
-    let slug = '';
+    const [id, slug] = select.value.split('|');
+    entityId.value = id;
     
-    // Если заполнен slug вручную
-    if (slugInput && slugInput.value.trim()) {
-        slug = slugInput.value.trim();
-    } 
-    // Если выбран ID в селекте
-    else if (idSelect && idSelect.value !== '0' && entitySlugs[type]) {
-        const entity = entitySlugs[type].find(e => e.id == idSelect.value);
-        if (entity && entity.slug) {
-            slug = entity.slug;
-        }
-    }
-    
-    if (slug) {
-        previewText.textContent = `/${type}/${slug}`;
-        previewContainer.style.display = 'block';
-    } else {
-        previewContainer.style.display = 'none';
-    }
+    const url = urlPatterns[pageType] + slug;
+    previewUrl.textContent = url;
+    previewContainer.style.display = 'block';
 }
 
-// Инициализация при загрузке
+// Инициализация
 document.addEventListener('DOMContentLoaded', function() {
-    updateEntitySelect();
+    updatePageSelect();
     
-    // Обработка выбора между ID и slug
-    const entitySlugInput = document.getElementById('entity_slug');
-    const entityIdSelect = document.getElementById('entity_id');
-    
-    // При вводе slug очищаем выбор в селекте
-    if (entitySlugInput) {
-        entitySlugInput.addEventListener('input', function() {
-            if (this.value.trim() !== '') {
-                entityIdSelect.value = '0';
-            }
-            updatePreviewLink();
-        });
-    }
-    
-    // При выборе в селекте очищаем slug
-    if (entityIdSelect) {
-        entityIdSelect.addEventListener('change', function() {
-            if (this.value !== '0') {
-                entitySlugInput.value = '';
-            }
-            updatePreviewLink();
-        });
-    }
-    
-    // Инициализация CKEditor если есть
+    // CKEditor
     if (typeof CKEDITOR !== 'undefined') {
         CKEDITOR.replace('answer', {
             height: 300,
@@ -248,15 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ] },
                 { name: 'links' },
                 { name: 'insert' },
-                { name: 'forms' },
-                { name: 'tools' },
-                { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
                 '/',
                 { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
                 { name: 'styles' },
-                { name: 'colors' },
-                { name: 'about' }
             ]
         });
     }
@@ -294,5 +273,10 @@ document.addEventListener('DOMContentLoaded', function() {
     .card-header {
         background-color: #f8f9fa;
         border-bottom: 1px solid #e0e0e0;
+    }
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
     }
 </style>
