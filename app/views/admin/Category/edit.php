@@ -47,6 +47,11 @@
                                  <label for="exampleFormControlInput1">Наименование</label>
                                  <input class="form-control" id="exampleFormControlInput1" name='title' type="text" placeholder="Имя категории" value="<?=h($category['title'])?>" required>
                               </div>
+                              <div class="mb-3">
+                                 <label for="slug">URL (slug)</label>
+                                 <input class="form-control" id="slug" name='slug' type="text" placeholder="url-kategorii" value="<?=h($category['slug'])?>">
+                                 <small class="text-muted">Оставьте пустым, чтобы не менять. Только латинские буквы, цифры и дефис.</small>
+                              </div>
                               
                               <div class="mb-3">
                                  <label for="exampleFormControlInput4">Прайс</label>

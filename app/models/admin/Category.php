@@ -63,6 +63,19 @@ class Category extends AppModel
             }
             $category->parent_id = post('parent_id', 'i');
             $category->title = post('title');
+            
+            // Обновление slug
+            $newSlug = post('slug');
+            if (!empty($newSlug)) {
+                $newSlug = AppModel::str2url($newSlug);
+                // Проверяем уникальность slug, исключая текущую запись
+                $existingSlug = R::findOne('category', 'slug = ? AND id != ?', [$newSlug, $id]);
+                if ($existingSlug) {
+                    $newSlug = $newSlug . '-' . $id;
+                }
+                $category->slug = $newSlug;
+            }
+            
             $category->description = post('description');
             $category->content = post('content');
             $category->keywords = post('keywords');
