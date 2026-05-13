@@ -106,6 +106,11 @@
                                  <div class="card-header">Мета теги</div>
                                  <div class="card-body">
                                     <div class="mb-3">
+                                       <label for="seo_title">SEO Title (заголовок страницы)</label>
+                                       <input class="form-control" id="seo_title" name='seo_title' type="text" placeholder="Заголовок для поисковиков" value="<?=h($category['seo_title'] ?? '')?>">
+                                       <small class="text-muted">Отображается во вкладке браузера и в результатах поиска. Если пусто - используется наименование категории.</small>
+                                    </div>
+                                    <div class="mb-3">
                                        <label for="exampleFormControlInput2">Описание</label>
                                        <input class="form-control" id="exampleFormControlInput2" name='description' type="text" placeholder="Описание категории" value="<?=h($category['description'])?>">
                                     </div>

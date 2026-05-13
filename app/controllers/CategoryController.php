@@ -54,17 +54,12 @@ class CategoryController extends AppController
 
       $prod = $this->model->get_products($ids, $start, $perpage, $get_brand);
       
-      if(!$prod){
-         if (!DEBUG) {
-            $this->error_404();
-            return;
+      $products = [];
+      if($prod){
+         foreach ($prod as $product) {
+            $product['product_info'] = $this->model->get_products_info($product['id']) ? $this->model->get_products_info($product['id']) : '' ;
+            $products[] = $product;
          }
-        throw new \Exception("Товары по запросу {$this->route['slug']} не найдены", 404);
-      }
-      
-      foreach ($prod as $product) {
-         $product['product_info'] = $this->model->get_products_info($product['id']) ? $this->model->get_products_info($product['id']) : '' ;
-         $products[] = $product;
       }
 
       $brands_arr = [];
@@ -90,7 +85,8 @@ class CategoryController extends AppController
       $brands = $brands_urls;
       
       
-      $this->setMeta($category['title'], $category['description'], $category['keywords']);
+      $pageTitle = !empty($category['seo_title']) ? $category['seo_title'] : $category['title'];
+      $this->setMeta($pageTitle, $category['description'], $category['keywords']);
       $this->set(compact('category', 'breadcrumbs', 'products', 'brands', 'total', 'pagination', 'get_brand'));
    }
 }

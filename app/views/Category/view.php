@@ -232,6 +232,19 @@
                   <p><?=count($products);?> товара(ов) из <?=$total;?></p>
                   <?=$pagination?>
                <?php endif;?>
+               <?php else: ?>
+               <div class="subproduct__empty" style="
+                  text-align: center;
+                  padding: 60px 20px;
+                  background: linear-gradient(268.34deg, #f3f8fb 5.64%, #fdfdfd 98.88%);
+                  border: 1px solid #f6f6f6;
+                  border-radius: 5px;
+                  margin-top: 20px;
+               ">
+                  <div style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;">📦</div>
+                  <h3 style="font-size: 20px; font-weight: 600; color: #082a43; margin-bottom: 10px;">Товаров пока нет</h3>
+                  <p style="font-size: 16px; color: #666; max-width: 400px; margin: 0 auto;">В данной категории пока нет товаров. Скоро они появятся!</p>
+               </div>
                <?php endif;?>
                
                <!-- Блок Вопросы-Ответы -->
