@@ -121,7 +121,7 @@ class Category extends AppModel
             $category->img = $original['img'];
             $category->icon = $original['icon'];
             $category->popular = $original['popular'];
-            $category->status = 0; // По умолчанию неактивна
+            $category->status = $original['status']; // Копируем статус оригинала
             
             R::store($category);
             R::commit();
