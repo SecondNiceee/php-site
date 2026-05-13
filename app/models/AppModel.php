@@ -9,10 +9,11 @@ class AppModel extends Model
    public static function create_slug($table, $field, $str, $id): string
    {
        $str = self::str2url($str);
-       $res = R::findOne($table, "$field = ?", [$str]);
+       // Проверяем существование slug, исключая текущую запись по id
+       $res = R::findOne($table, "$field = ? AND id != ?", [$str, $id]);
        if ($res) {
            $str = "{$str}-{$id}";
-           $res = R::count($table, "$field = ?", [$str]);
+           $res = R::count($table, "$field = ? AND id != ?", [$str, $id]);
            if ($res) {
                $str = self::create_slug($table, $field, $str, $id);
            }
