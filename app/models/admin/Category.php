@@ -124,37 +124,6 @@ class Category extends AppModel
             $category->status = $original['status']; // Копируем статус оригинала
             
             R::store($category);
-            
-            // Копируем привязку товаров к новой категории
-            $products = R::getAll("SELECT * FROM product WHERE category_id = ?", [$id]);
-            foreach ($products as $prod) {
-                $newProduct = R::dispense('product');
-                $newProduct->category_id = $category_id;
-                $newProduct->brand_id = $prod['brand_id'];
-                $newProduct->status = $prod['status'];
-                $newProduct->img = $prod['img'];
-                $newProduct->title = $prod['title'];
-                $newProduct->content = $prod['content'];
-                $newProduct->keywords = $prod['keywords'];
-                $newProduct->description = $prod['description'];
-                $newProduct->tech_desc = $prod['tech_desc'];
-                $newProduct->brochure = $prod['brochure'];
-                $newProductId = R::store($newProduct);
-                
-                $newProduct->slug = AppModel::create_slug('product', 'slug', $prod['title'], $newProductId);
-                R::store($newProduct);
-                
-                // Копируем product_info
-                $productInfo = R::getAll("SELECT * FROM product_info WHERE product_id = ?", [$prod['id']]);
-                foreach ($productInfo as $info) {
-                    R::exec("INSERT INTO product_info (product_id, info_key, info_val) VALUES (?,?,?)", [
-                        $newProductId,
-                        $info['info_key'],
-                        $info['info_val'],
-                    ]);
-                }
-            }
-            
             R::commit();
             return $category_id;
         } catch (\Exception $e) {
