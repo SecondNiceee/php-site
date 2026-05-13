@@ -85,7 +85,8 @@ class CategoryController extends AppController
       $brands = $brands_urls;
       
       
-      $this->setMeta($category['title'], $category['description'], $category['keywords']);
+      $pageTitle = !empty($category['seo_title']) ? $category['seo_title'] : $category['title'];
+      $this->setMeta($pageTitle, $category['description'], $category['keywords']);
       $this->set(compact('category', 'breadcrumbs', 'products', 'brands', 'total', 'pagination', 'get_brand'));
    }
 }

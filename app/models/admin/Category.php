@@ -33,6 +33,7 @@ class Category extends AppModel
             $category->title = post('title');
             $category_id = R::store($category);
             $category->slug = AppModel::create_slug('category', 'slug', $_POST['title'], $category_id);
+            $category->seo_title = post('seo_title');
             $category->description = post('description');
             $category->content = post('content');
             $category->keywords = post('keywords');
@@ -76,6 +77,7 @@ class Category extends AppModel
                 $category->slug = $newSlug;
             }
             
+            $category->seo_title = post('seo_title');
             $category->description = post('description');
             $category->content = post('content');
             $category->keywords = post('keywords');
@@ -114,6 +116,7 @@ class Category extends AppModel
             $category_id = R::store($category);
             
             $category->slug = AppModel::create_slug('category', 'slug', $category->title, $category_id);
+            $category->seo_title = $original['seo_title'] ?? '';
             $category->description = $original['description'];
             $category->content = $original['content'];
             $category->keywords = $original['keywords'];

@@ -25,7 +25,8 @@ class SubcatalogController extends AppController
 
       $breadcrumbs = Breadcrumbs::getBreadcrumbs($category['id']);
 
-      $this->setMeta($category['title'], '', '');
+      $pageTitle = !empty($category['seo_title']) ? $category['seo_title'] : $category['title'];
+      $this->setMeta($pageTitle, $category['description'] ?? '', $category['keywords'] ?? '');
       $this->set(compact('catalog', 'category', 'subcatalog', 'breadcrumbs', 'brands'));
 
    }
