@@ -118,6 +118,7 @@ class Category extends AppModel
             $category_id = R::store($category);
             
             $category->slug = AppModel::create_slug('category', 'slug', $category->title, $category_id);
+            $category->seo_title = $original['seo_title'] ?? '';
             $category->description = $original['description'] ?? '';
             $category->content = $original['content'] ?? '';
             $category->keywords = $original['keywords'] ?? '';
