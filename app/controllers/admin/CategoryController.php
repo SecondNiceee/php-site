@@ -128,7 +128,9 @@ class CategoryController extends AppController
          $cache = Cache::getInstance();
          $cache->delete('shop_menu');
       } else {
-         $_SESSION['errors'] = 'Ошибка при дублировании!';
+         $debugError = $_SESSION['debug_error'] ?? 'Неизвестная ошибка';
+         unset($_SESSION['debug_error']);
+         $_SESSION['errors'] = 'Ошибка при дублировании: ' . $debugError;
       }
       redirect();
    }
