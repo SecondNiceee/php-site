@@ -103,34 +103,59 @@ class Category extends AppModel
 
     public function duplicate_category($id): int|false
     {
+        error_log("[v0] duplicate_category START - ID: " . $id);
+        
         R::begin();
         try {
+            error_log("[v0] Fetching original category...");
             $original = R::getRow("SELECT * FROM category WHERE id = ?", [$id]);
+            
             if (!$original) {
+                error_log("[v0] Original category NOT FOUND");
+                $_SESSION['debug_error'] = "Категория с ID {$id} не найдена";
                 return false;
             }
             
+            error_log("[v0] Original found: " . json_encode(array_keys($original)));
+            error_log("[v0] Original title: " . ($original['title'] ?? 'NULL'));
+            
             $category = R::dispense('category');
+            error_log("[v0] Dispensed new category bean");
+            
             $category->parent_id = $original['parent_id'];
             $category->title = $original['title'] . ' (копия)';
+            error_log("[v0] Set parent_id and title, storing first time...");
+            
             $category_id = R::store($category);
+            error_log("[v0] First store done, new ID: " . $category_id);
             
             $category->slug = AppModel::create_slug('category', 'slug', $category->title, $category_id);
-            $category->seo_title = $original['seo_title'] ?? '';
-            $category->description = $original['description'];
-            $category->content = $original['content'];
-            $category->keywords = $original['keywords'];
-            $category->price = $original['price'];
-            $category->img = $original['img'];
-            $category->icon = $original['icon'];
-            $category->popular = $original['popular'];
-            $category->status = $original['status']; // Копируем статус оригинала
+            error_log("[v0] Created slug: " . $category->slug);
             
+            $category->seo_title = $original['seo_title'] ?? '';
+            $category->description = $original['description'] ?? '';
+            $category->content = $original['content'] ?? '';
+            $category->keywords = $original['keywords'] ?? '';
+            $category->price = $original['price'] ?? '';
+            $category->img = $original['img'] ?? '';
+            $category->icon = $original['icon'] ?? '';
+            $category->popular = $original['popular'] ?? 0;
+            $category->status = $original['status'] ?? 0;
+            
+            error_log("[v0] All fields set, storing final...");
             R::store($category);
+            error_log("[v0] Final store done");
+            
             R::commit();
+            error_log("[v0] COMMIT SUCCESS - New category ID: " . $category_id);
             return $category_id;
+            
         } catch (\Exception $e) {
             R::rollback();
+            error_log("[v0] EXCEPTION: " . $e->getMessage());
+            error_log("[v0] File: " . $e->getFile() . " Line: " . $e->getLine());
+            error_log("[v0] Trace: " . $e->getTraceAsString());
+            $_SESSION['debug_error'] = $e->getMessage();
             return false;
         }
     }
